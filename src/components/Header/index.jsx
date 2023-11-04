@@ -1,14 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { AuthContext } from '../../context/authContext';
-import { CartContext } from '../../context/cartContext';
-import cartMobile from './cart-mobile.png';
-import cart from './cart.png';
-import logo from './logo.png';
-import profileMobile from './profile-mobile.png';
-import profile from './profile.png';
-import search from './search.png';
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
+import { AuthContext } from "../../context/authContext";
+import { CartContext } from "../../context/cartContext";
+import cartMobile from "./cart-mobile.png";
+import cart from "./cart.png";
+import deleteHover from "./close-hover.png";
+import delect from "./close.png";
+import logo from "./logo.png";
+import profileMobile from "./profile-mobile.png";
+import profile from "./profile.png";
+import search from "./search.png";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -65,14 +67,14 @@ const CategoryLink = styled.a`
   padding-right: 11px;
   position: relative;
   text-decoration: none;
-  color: ${(props) => (props.$isActive ? '#8b572a' : '#3f3a3a')};
+  color: ${(props) => (props.$isActive ? "#8b572a" : "#3f3a3a")};
 
   @media screen and (max-width: 1279px) {
     font-size: 16px;
     letter-spacing: normal;
     padding: 0;
     text-align: center;
-    color: ${(props) => (props.$isActive ? 'white' : '#828282')};
+    color: ${(props) => (props.$isActive ? "white" : "#828282")};
     line-height: 50px;
     flex-grow: 1;
   }
@@ -87,7 +89,7 @@ const CategoryLink = styled.a`
   }
 
   & + &::before {
-    content: '|';
+    content: "|";
     position: absolute;
     left: 0;
     color: #3f3a3a;
@@ -97,13 +99,17 @@ const CategoryLink = styled.a`
     }
   }
 `;
+const SearchBoard = styled.div`
+  margin-left: auto;
+  width: 214px;
+`;
 
 const SearchInput = styled.input`
   height: 40px;
   width: 214px;
   border: none;
   outline: none;
-  margin-left: auto;
+  /* margin-left: auto; */
   border-radius: 20px;
   padding: 6px 45px 6px 20px;
   border: solid 1px #979797;
@@ -167,7 +173,7 @@ const PageLink = styled(Link)`
 
   & + &::before {
     @media screen and (max-width: 1279px) {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       width: 1px;
@@ -224,32 +230,78 @@ const PageLinkText = styled.div`
     color: white;
   }
 `;
-
+const SearchHistorys = styled.ul`
+  position: absolute;
+  width: 214px;
+  padding: 6px 10px 6px 10px;
+  border: 1px solid #bababa;
+  border-radius: 20px;
+  background-color: #ffffff;
+`;
+const SearchHistory = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+`;
+const HsitoryTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #bababa;
+  padding-bottom: 5px;
+  font-size: 20px;
+`;
+const HsitoryDelete = styled.div`
+  background-color: transparent;
+  font-size: 16px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #bababa;
+`;
+const SearchDelete = styled.img`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  &:hover {
+    content: url(${deleteHover});
+  }
+`;
+const SearchLink = styled.li`
+  padding: 0px 0px 0px 5px;
+  line-height: 30px;
+  display: inline-block;
+`;
 const categories = [
   {
-    name: 'women',
-    displayText: '女裝',
+    name: "women",
+    displayText: "女裝",
   },
   {
-    name: 'men',
-    displayText: '男裝',
+    name: "men",
+    displayText: "男裝",
   },
   {
-    name: 'accessories',
-    displayText: '配件',
+    name: "accessories",
+    displayText: "配件",
   },
 ];
+const searchRecodes = ["襯衫", "牛仔褲", "帽子"];
 
 function Header() {
-  const [inputValue, setInputValue] = useState('');
-  const { user } = useContext(AuthContext)
+  const [inputValue, setInputValue] = useState("");
+  const [searchToggle, setSearchToggle] = useState(false);
+  const { user } = useContext(AuthContext);
   const { cartCount } = useContext(CartContext);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
+  const category = searchParams.get("category");
 
+  function handleClick() {
+    setSearchToggle(!searchToggle);
+    console.log("handleClick Action");
+  }
   useEffect(() => {
-    if (category) setInputValue('');
+    if (category) setInputValue("");
   }, [category]);
 
   return (
@@ -263,7 +315,7 @@ function Header() {
             onClick={() => {
               window.scrollTo({
                 top: 0,
-                behavior: 'smooth',
+                behavior: "smooth",
               });
               navigate(`/?category=${name}`);
             }}
@@ -272,15 +324,42 @@ function Header() {
           </CategoryLink>
         ))}
       </CategoryLinks>
-      <SearchInput
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            navigate(`/?keyword=${inputValue}`);
-          }
-        }}
-        onChange={(e) => setInputValue(e.target.value)}
-        value={inputValue}
-      />
+      <SearchBoard>
+        <SearchInput
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              navigate(`/?keyword=${inputValue}`);
+              setSearchToggle(false);
+            }
+          }}
+          onClick={handleClick}
+          onChange={(e) => setInputValue(e.target.value)}
+          value={inputValue}
+        />
+        <SearchHistorys style={{ display: searchToggle ? "block" : "none" }}>
+          <HsitoryTitle>
+            最近搜尋<HsitoryDelete>刪除全部</HsitoryDelete>
+          </HsitoryTitle>
+          {searchRecodes.map((value, index) => (
+            <SearchHistory>
+              <SearchLink
+                key={index}
+                onClick={() => {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                  });
+                  navigate(`/?keyword=${value}`);
+                  setSearchToggle(!searchToggle);
+                }}
+              >
+                {value}
+              </SearchLink>
+              <SearchDelete src={delect} />
+            </SearchHistory>
+          ))}
+        </SearchHistorys>
+      </SearchBoard>
       <PageLinks>
         <PageLink to="/checkout">
           <PageLinkCartIcon icon={cart}>
