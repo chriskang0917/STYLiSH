@@ -102,8 +102,12 @@ const CategoryLink = styled.a`
 const SearchBoard = styled.div`
   margin-left: auto;
   width: 214px;
+  @media screen and (max-width: 1279px) {
+    position: fixed;
+    right: 16px;
+    top: 6px;
+  }
 `;
-
 const SearchInput = styled.input`
   height: 40px;
   width: 214px;
@@ -120,21 +124,13 @@ const SearchInput = styled.input`
   font-size: 20px;
   line-height: 24px;
   color: #8b572a;
-
   @media screen and (max-width: 1279px) {
-    width: 0;
-    border: none;
+    width: ${(props) => (props.searchToggle ? "calc(100% - 20px)" : "0")};
+    border: ${(props) => (props.searchToggle ? "solid 1px #979797" : "none")};
     position: fixed;
     right: 16px;
     background-size: 32px;
     background-position: right center;
-  }
-
-  &:focus {
-    @media screen and (max-width: 1279px) {
-      width: calc(100% - 20px);
-      border: solid 1px #979797;
-    }
   }
 `;
 
@@ -237,6 +233,13 @@ const SearchHistorys = styled.ul`
   border: 1px solid #bababa;
   border-radius: 20px;
   background-color: #ffffff;
+  @media screen and (max-width: 1279px) {
+    width: calc(100% - 20px);
+    position: fixed;
+    right: 16px;
+    top: 46px;
+    background-position: right center;
+  }
 `;
 const SearchHistory = styled.div`
   display: flex;
@@ -298,8 +301,8 @@ function Header() {
 
   function handleClick() {
     setSearchToggle(!searchToggle);
-    console.log("handleClick Action");
   }
+
   useEffect(() => {
     if (category) setInputValue("");
   }, [category]);
@@ -332,6 +335,7 @@ function Header() {
               setSearchToggle(false);
             }
           }}
+          searchToggle={searchToggle}
           onClick={handleClick}
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
