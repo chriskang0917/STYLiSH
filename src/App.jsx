@@ -1,10 +1,13 @@
-import { Outlet } from 'react-router-dom';
-import { createGlobalStyle } from 'styled-components';
-import { Reset } from 'styled-reset';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import { AuthContextProvider } from './context/authContext';
-import { CartContextProvider } from './context/cartContext';
+import { NextUIProvider } from "@nextui-org/system";
+import * as React from "react";
+import { Outlet } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
+import { Reset } from "styled-reset";
+import Chat from "./components/Chat";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import { AuthContextProvider } from "./context/authContext";
+import { CartContextProvider } from "./context/cartContext";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -25,19 +28,29 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `;
-
+const ChatContainer = styled.div`
+  position: fixed;
+  bottom: 150px;
+  right: 50px;
+  z-index: 999;
+`;
 function App() {
   return (
     <>
-      <Reset />
-      <GlobalStyle />
-      <AuthContextProvider>
-        <CartContextProvider>
-          <Header />
-          <Outlet />
-          <Footer />
-        </CartContextProvider>
-      </AuthContextProvider>
+      <NextUIProvider>
+        <Reset />
+        <GlobalStyle />
+        <AuthContextProvider>
+          <CartContextProvider>
+            <Header />
+            <Outlet />
+            <ChatContainer>
+              <Chat />
+            </ChatContainer>
+            <Footer />
+          </CartContextProvider>
+        </AuthContextProvider>
+      </NextUIProvider>
     </>
   );
 }
