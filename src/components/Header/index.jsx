@@ -1,14 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { AuthContext } from '../../context/authContext';
-import { CartContext } from '../../context/cartContext';
-import cartMobile from './cart-mobile.png';
-import cart from './cart.png';
-import logo from './logo.png';
-import profileMobile from './profile-mobile.png';
-import profile from './profile.png';
-import search from './search.png';
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
+import { AuthContext } from "../../context/authContext";
+import { CartContext } from "../../context/cartContext";
+import cartMobile from "./cart-mobile.png";
+import cart from "./cart.png";
+import clockMobile from "./clock-mobile.png";
+import clock from "./clock.png";
+import logo from "./logo.png";
+import profileMobile from "./profile-mobile.png";
+import profile from "./profile.png";
+import search from "./search.png";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -44,7 +46,7 @@ const Logo = styled(Link)`
 `;
 
 const CategoryLinks = styled.div`
-  margin: 16px 0 0 57px;
+  margin: 16px 0 0 10px;
 
   @media screen and (max-width: 1279px) {
     margin: 0;
@@ -60,19 +62,20 @@ const CategoryLinks = styled.div`
 
 const CategoryLink = styled.a`
   font-size: 20px;
-  letter-spacing: 30px;
+
+  letter-spacing: 25px;
   padding-left: 39px;
   padding-right: 11px;
   position: relative;
   text-decoration: none;
-  color: ${(props) => (props.$isActive ? '#8b572a' : '#3f3a3a')};
+  color: ${(props) => (props.$isActive ? "#8b572a" : "#3f3a3a")};
 
   @media screen and (max-width: 1279px) {
     font-size: 16px;
     letter-spacing: normal;
     padding: 0;
     text-align: center;
-    color: ${(props) => (props.$isActive ? 'white' : '#828282')};
+    color: ${(props) => (props.$isActive ? "white" : "#828282")};
     line-height: 50px;
     flex-grow: 1;
   }
@@ -87,7 +90,7 @@ const CategoryLink = styled.a`
   }
 
   & + &::before {
-    content: '|';
+    content: "|";
     position: absolute;
     left: 0;
     color: #3f3a3a;
@@ -100,6 +103,7 @@ const CategoryLink = styled.a`
 
 const SearchInput = styled.input`
   height: 40px;
+
   width: 214px;
   border: none;
   outline: none;
@@ -122,6 +126,7 @@ const SearchInput = styled.input`
     right: 16px;
     background-size: 32px;
     background-position: right center;
+    flex: 1;
   }
 
   &:focus {
@@ -167,7 +172,7 @@ const PageLink = styled(Link)`
 
   & + &::before {
     @media screen and (max-width: 1279px) {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       width: 1px;
@@ -191,6 +196,14 @@ const PageLinkCartIcon = styled(PageLinkIcon)`
 
   @media screen and (max-width: 1279px) {
     background-image: url(${cartMobile});
+  }
+`;
+
+const PageLinkHistoryIcon = styled(PageLinkIcon)`
+  background-image: url(${clock});
+
+  @media screen and (max-width: 1279px) {
+    background-image: url(${clockMobile});
   }
 `;
 
@@ -223,34 +236,65 @@ const PageLinkText = styled.div`
     display: block;
     color: white;
   }
+  @media screen and (max-width: 479px) {
+    display: block;
+    color: white;
+    font-size: 14px;
+  }
 `;
 
 const categories = [
   {
-    name: 'women',
-    displayText: '女裝',
+    name: "women",
+    displayText: "女裝",
   },
   {
-    name: 'men',
-    displayText: '男裝',
+    name: "men",
+    displayText: "男裝",
   },
   {
-    name: 'accessories',
-    displayText: '配件',
+    name: "accessories",
+    displayText: "配件",
   },
 ];
 
 function Header() {
-  const [inputValue, setInputValue] = useState('');
-  const { user } = useContext(AuthContext)
+  const [inputValue, setInputValue] = useState("");
+  const { user } = useContext(AuthContext);
   const { cartCount } = useContext(CartContext);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
+  const category = searchParams.get("category");
+  const [userToken, setUserToken] = useState("");
 
   useEffect(() => {
-    if (category) setInputValue('');
+    if (category) setInputValue("");
   }, [category]);
+
+  const handleLinkClick = async () => {
+    try {
+      const response = await fetch("/api/add-browse-record", {
+        //實際api
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`, //api中token
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: `${api.hostname}/products/details?id=${id}`, //實際點擊商品url
+          timestamp: Date.now(),
+        }),
+      });
+
+      if (response.ok) {
+        console.log("瀏覽紀錄已更新");
+      } else {
+        console.error("發生錯誤");
+      }
+    } catch (error) {
+      console.error("錯誤: " + error);
+    }
+  };
 
   return (
     <Wrapper>
@@ -263,7 +307,7 @@ function Header() {
             onClick={() => {
               window.scrollTo({
                 top: 0,
-                behavior: 'smooth',
+                behavior: "smooth",
               });
               navigate(`/?category=${name}`);
             }}
@@ -274,7 +318,7 @@ function Header() {
       </CategoryLinks>
       <SearchInput
         onKeyPress={(e) => {
-          if (e.key === 'Enter') {
+          if (e.key === "Enter") {
             navigate(`/?keyword=${inputValue}`);
           }
         }}
@@ -282,6 +326,10 @@ function Header() {
         value={inputValue}
       />
       <PageLinks>
+        <PageLink to="/history" id="linkToRecord" onClick={handleLinkClick}>
+          <PageLinkHistoryIcon icon={clock} />
+          <PageLinkText>瀏覽紀錄</PageLinkText>
+        </PageLink>
         <PageLink to="/checkout">
           <PageLinkCartIcon icon={cart}>
             <PageLinkIconNumber>{cartCount}</PageLinkIconNumber>
