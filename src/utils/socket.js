@@ -17,6 +17,9 @@ export const socket = {
 
     socketIO.emit("talk", message, userIdentity);
   },
+  disconnect() {
+    socketIO.disconnect();
+  },
   isAdmin() {
     this.isUser = false;
   },
