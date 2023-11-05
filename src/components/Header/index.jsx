@@ -1,14 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { AuthContext } from '../../context/authContext';
-import { CartContext } from '../../context/cartContext';
-import cartMobile from './cart-mobile.png';
-import cart from './cart.png';
-import logo from './logo.png';
-import profileMobile from './profile-mobile.png';
-import profile from './profile.png';
-import search from './search.png';
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
+import { AuthContext } from "../../context/authContext";
+import { CartContext } from "../../context/cartContext";
+import cartMobile from "./cart-mobile.png";
+import cart from "./cart.png";
+import deleteHover from "./close-hover.png";
+import delect from "./close.png";
+import logo from "./logo.png";
+import profileMobile from "./profile-mobile.png";
+import profile from "./profile.png";
+import search from "./search.png";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -65,14 +67,14 @@ const CategoryLink = styled.a`
   padding-right: 11px;
   position: relative;
   text-decoration: none;
-  color: ${(props) => (props.$isActive ? '#8b572a' : '#3f3a3a')};
+  color: ${(props) => (props.$isActive ? "#8b572a" : "#3f3a3a")};
 
   @media screen and (max-width: 1279px) {
     font-size: 16px;
     letter-spacing: normal;
     padding: 0;
     text-align: center;
-    color: ${(props) => (props.$isActive ? 'white' : '#828282')};
+    color: ${(props) => (props.$isActive ? "white" : "#828282")};
     line-height: 50px;
     flex-grow: 1;
   }
@@ -87,7 +89,7 @@ const CategoryLink = styled.a`
   }
 
   & + &::before {
-    content: '|';
+    content: "|";
     position: absolute;
     left: 0;
     color: #3f3a3a;
@@ -97,13 +99,21 @@ const CategoryLink = styled.a`
     }
   }
 `;
-
+const SearchBoard = styled.div`
+  margin-left: auto;
+  width: 214px;
+  @media screen and (max-width: 1279px) {
+    position: fixed;
+    right: 16px;
+    top: 6px;
+  }
+`;
 const SearchInput = styled.input`
   height: 40px;
   width: 214px;
   border: none;
   outline: none;
-  margin-left: auto;
+  /* margin-left: auto; */
   border-radius: 20px;
   padding: 6px 45px 6px 20px;
   border: solid 1px #979797;
@@ -114,21 +124,13 @@ const SearchInput = styled.input`
   font-size: 20px;
   line-height: 24px;
   color: #8b572a;
-
   @media screen and (max-width: 1279px) {
-    width: 0;
-    border: none;
+    width: ${(props) => (props.searchToggle ? "calc(100% - 20px)" : "0")};
+    border: ${(props) => (props.searchToggle ? "solid 1px #979797" : "none")};
     position: fixed;
     right: 16px;
     background-size: 32px;
     background-position: right center;
-  }
-
-  &:focus {
-    @media screen and (max-width: 1279px) {
-      width: calc(100% - 20px);
-      border: solid 1px #979797;
-    }
   }
 `;
 
@@ -167,7 +169,7 @@ const PageLink = styled(Link)`
 
   & + &::before {
     @media screen and (max-width: 1279px) {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       width: 1px;
@@ -224,32 +226,127 @@ const PageLinkText = styled.div`
     color: white;
   }
 `;
-
+const SearchHistorys = styled.ul`
+  position: absolute;
+  width: 214px;
+  padding: 6px 10px 6px 10px;
+  border: 1px solid #bababa;
+  border-radius: 20px;
+  background-color: #ffffff;
+  @media screen and (max-width: 1279px) {
+    width: calc(100% - 20px);
+    position: fixed;
+    right: 16px;
+    top: 46px;
+    background-position: right center;
+  }
+`;
+const SearchHistory = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  padding: 5px;
+`;
+const HsitoryTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #bababa;
+  padding-bottom: 5px;
+  font-size: 20px;
+`;
+const HsitoryDelete = styled.div`
+  background-color: transparent;
+  font-size: 14px;
+  color: #bababa;
+  &:hover {
+    color: #000;
+  }
+`;
+const SearchDelete = styled.img`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  &:hover {
+    content: url(${deleteHover});
+  }
+`;
+const SearchLink = styled.li`
+  line-height: 30px;
+  display: inline-block;
+`;
+const SearchEmpty = styled.p`
+  font-size: 16px;
+  text-align: center;
+  padding: 10px;
+`;
 const categories = [
   {
-    name: 'women',
-    displayText: '女裝',
+    name: "women",
+    displayText: "女裝",
   },
   {
-    name: 'men',
-    displayText: '男裝',
+    name: "men",
+    displayText: "男裝",
   },
   {
-    name: 'accessories',
-    displayText: '配件',
+    name: "accessories",
+    displayText: "配件",
   },
 ];
-
 function Header() {
-  const [inputValue, setInputValue] = useState('');
-  const { user } = useContext(AuthContext)
+  const [inputValue, setInputValue] = useState("");
+  const [searchToggle, setSearchToggle] = useState(false);
+  const [keywordHistories, setKeywordHistories] = useState(
+    JSON.parse(window.localStorage.getItem("keywordHistories")) || []
+  );
+  const { user } = useContext(AuthContext);
   const { cartCount } = useContext(CartContext);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
+  const category = searchParams.get("category");
+
+  function handleClick() {
+    setSearchToggle(!searchToggle);
+    console.log(keywordHistories.length);
+  }
+  function handleDelete(itemIndex) {
+    const newkeyWordHistories = keywordHistories.filter(
+      (_, index) => index !== itemIndex
+    );
+    setKeywordHistories(newkeyWordHistories);
+    window.localStorage.setItem(
+      "keywordHistories",
+      JSON.stringify(newkeyWordHistories)
+    );
+  }
+  function handleDeleteAll() {
+    setKeywordHistories([]);
+    window.localStorage.removeItem("keywordHistories");
+  }
+  function handleKeywordHistories(string) {
+    //若搜尋紀錄已經有同樣值，會把該直往前移，不出現同樣的值
+    if (keywordHistories.includes(string)) {
+      const newkeyWordHistories = keywordHistories.filter(
+        (keyword) => keyword !== string
+      );
+      const keywords = [string, ...newkeyWordHistories];
+      setKeywordHistories(keywords);
+      window.localStorage.setItem("keywordHistories", JSON.stringify(keywords));
+    } else {
+      let keywords = [string, ...keywordHistories];
+      //只保留最新三個紀錄
+      if (keywords.length > 3) {
+        keywords.splice(3, 1);
+      }
+      setKeywordHistories(keywords);
+      window.localStorage.setItem("keywordHistories", JSON.stringify(keywords));
+    }
+  }
 
   useEffect(() => {
-    if (category) setInputValue('');
+    if (category) setInputValue("");
   }, [category]);
 
   return (
@@ -263,7 +360,7 @@ function Header() {
             onClick={() => {
               window.scrollTo({
                 top: 0,
-                behavior: 'smooth',
+                behavior: "smooth",
               });
               navigate(`/?category=${name}`);
             }}
@@ -272,15 +369,51 @@ function Header() {
           </CategoryLink>
         ))}
       </CategoryLinks>
-      <SearchInput
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            navigate(`/?keyword=${inputValue}`);
-          }
-        }}
-        onChange={(e) => setInputValue(e.target.value)}
-        value={inputValue}
-      />
+      <SearchBoard>
+        <SearchInput
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              navigate(`/?keyword=${inputValue}`);
+              setSearchToggle(false);
+              handleKeywordHistories(inputValue);
+            }
+          }}
+          searchToggle={searchToggle}
+          onClick={handleClick}
+          onChange={(e) => setInputValue(e.target.value)}
+          value={inputValue}
+        />
+        <SearchHistorys style={{ display: searchToggle ? "block" : "none" }}>
+          <HsitoryTitle>
+            搜尋紀錄
+            <HsitoryDelete onClick={handleDeleteAll}>刪除全部</HsitoryDelete>
+          </HsitoryTitle>
+          {keywordHistories.length === 0 ? (
+            <SearchEmpty>最近無搜尋紀錄</SearchEmpty>
+          ) : (
+            keywordHistories.map((value, index) => (
+              <SearchHistory key={index}>
+                <SearchLink
+                  onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    });
+                    navigate(`/?keyword=${value}`);
+                    setSearchToggle(!searchToggle);
+                  }}
+                >
+                  {value}
+                </SearchLink>
+                <SearchDelete
+                  src={delect}
+                  onClick={() => handleDelete(index)}
+                />
+              </SearchHistory>
+            ))
+          )}
+        </SearchHistorys>
+      </SearchBoard>
       <PageLinks>
         <PageLink to="/checkout">
           <PageLinkCartIcon icon={cart}>
