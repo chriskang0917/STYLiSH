@@ -1,9 +1,16 @@
 import { io } from "socket.io-client";
 
 export class Socket {
-  constructor(endpoint) {
-    this.isUser = true;
-    this.socket = io(endpoint);
+  constructor(hostName) {
+    this.socket = io(hostName);
+    this.jwtToken = localStorage.getItem("jwtToken") || undefined;
+  }
+
+  connect(identity) {
+    this.user = identity;
+
+    const userIdentity = [identity, this.jwtToken];
+    this.socket.emit("user-check", userIdentity);
   }
 
   receive(setMessage) {
@@ -13,18 +20,11 @@ export class Socket {
   }
 
   send(message) {
-    const jwtToken = localStorage.getItem("jwtToken");
-    const identity = this.isUser ? "user" : "admin";
-    const userIdentity = [identity, this.socket.id, jwtToken];
-
+    const userIdentity = [this.user, this.jwtToken];
     this.socket.emit("talk", message, userIdentity);
   }
 
   disconnect() {
     this.socket.disconnect();
-  }
-
-  isAdmin() {
-    this.isUser = false;
   }
 }
