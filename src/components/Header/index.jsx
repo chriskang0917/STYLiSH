@@ -326,12 +326,23 @@ function Header() {
     window.localStorage.removeItem("keywordHistories");
   }
   function handleKeywordHistories(string) {
-    let keywords = [string, ...keywordHistories];
-    if (keywords.length > 3) {
-      keywords.splice(3, 1);
+    //若搜尋紀錄已經有同樣值，會把該直往前移，不出現同樣的值
+    if (keywordHistories.includes(string)) {
+      const newkeyWordHistories = keywordHistories.filter(
+        (keyword) => keyword !== string
+      );
+      const keywords = [string, ...newkeyWordHistories];
+      setKeywordHistories(keywords);
+      window.localStorage.setItem("keywordHistories", JSON.stringify(keywords));
+    } else {
+      let keywords = [string, ...keywordHistories];
+      //只保留最新三個紀錄
+      if (keywords.length > 3) {
+        keywords.splice(3, 1);
+      }
+      setKeywordHistories(keywords);
+      window.localStorage.setItem("keywordHistories", JSON.stringify(keywords));
     }
-    setKeywordHistories(keywords);
-    window.localStorage.setItem("keywordHistories", JSON.stringify(keywords));
   }
 
   useEffect(() => {
@@ -378,7 +389,7 @@ function Header() {
             <HsitoryDelete onClick={handleDeleteAll}>刪除全部</HsitoryDelete>
           </HsitoryTitle>
           {keywordHistories.length === 0 ? (
-            <SearchEmpty>最近無收尋紀錄</SearchEmpty>
+            <SearchEmpty>最近無搜尋紀錄</SearchEmpty>
           ) : (
             keywordHistories.map((value, index) => (
               <SearchHistory key={index}>
