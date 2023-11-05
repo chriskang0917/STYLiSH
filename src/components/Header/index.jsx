@@ -246,6 +246,7 @@ const SearchHistory = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 20px;
+  padding: 5px;
 `;
 const HsitoryTitle = styled.div`
   display: flex;
@@ -257,9 +258,11 @@ const HsitoryTitle = styled.div`
 `;
 const HsitoryDelete = styled.div`
   background-color: transparent;
-  font-size: 16px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #bababa;
+  font-size: 14px;
+  color: #bababa;
+  &:hover {
+    color: #000;
+  }
 `;
 const SearchDelete = styled.img`
   display: inline-block;
@@ -270,9 +273,13 @@ const SearchDelete = styled.img`
   }
 `;
 const SearchLink = styled.li`
-  padding: 0px 0px 0px 5px;
   line-height: 30px;
   display: inline-block;
+`;
+const SearchEmpty = styled.p`
+  font-size: 16px;
+  text-align: center;
+  padding: 10px;
 `;
 const categories = [
   {
@@ -302,6 +309,7 @@ function Header() {
 
   function handleClick() {
     setSearchToggle(!searchToggle);
+    console.log(keywordHistories.length);
   }
   function handleDelete(itemIndex) {
     const newkeyWordHistories = keywordHistories.filter(
@@ -366,26 +374,33 @@ function Header() {
         />
         <SearchHistorys style={{ display: searchToggle ? "block" : "none" }}>
           <HsitoryTitle>
-            最近搜尋
+            搜尋紀錄
             <HsitoryDelete onClick={handleDeleteAll}>刪除全部</HsitoryDelete>
           </HsitoryTitle>
-          {keywordHistories.map((value, index) => (
-            <SearchHistory key={index}>
-              <SearchLink
-                onClick={() => {
-                  window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                  });
-                  navigate(`/?keyword=${value}`);
-                  setSearchToggle(!searchToggle);
-                }}
-              >
-                {value}
-              </SearchLink>
-              <SearchDelete src={delect} onClick={() => handleDelete(index)} />
-            </SearchHistory>
-          ))}
+          {keywordHistories.length === 0 ? (
+            <SearchEmpty>最近無收尋紀錄</SearchEmpty>
+          ) : (
+            keywordHistories.map((value, index) => (
+              <SearchHistory key={index}>
+                <SearchLink
+                  onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    });
+                    navigate(`/?keyword=${value}`);
+                    setSearchToggle(!searchToggle);
+                  }}
+                >
+                  {value}
+                </SearchLink>
+                <SearchDelete
+                  src={delect}
+                  onClick={() => handleDelete(index)}
+                />
+              </SearchHistory>
+            ))
+          )}
         </SearchHistorys>
       </SearchBoard>
       <PageLinks>
