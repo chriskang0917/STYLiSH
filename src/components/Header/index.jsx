@@ -288,11 +288,12 @@ const categories = [
     displayText: "配件",
   },
 ];
-const searchRecodes = ["襯衫", "牛仔褲", "帽子"];
-
 function Header() {
   const [inputValue, setInputValue] = useState("");
   const [searchToggle, setSearchToggle] = useState(false);
+  const [keywordHistories, setKeywordHistories] = useState(
+    JSON.parse(window.localStorage.getItem("keywordHistories")) || []
+  );
   const { user } = useContext(AuthContext);
   const { cartCount } = useContext(CartContext);
   const navigate = useNavigate();
@@ -301,6 +302,28 @@ function Header() {
 
   function handleClick() {
     setSearchToggle(!searchToggle);
+  }
+  function handleDelete(itemIndex) {
+    const newkeyWordHistories = keywordHistories.filter(
+      (_, index) => index !== itemIndex
+    );
+    setKeywordHistories(newkeyWordHistories);
+    window.localStorage.setItem(
+      "keywordHistories",
+      JSON.stringify(newkeyWordHistories)
+    );
+  }
+  function handleDeleteAll() {
+    setKeywordHistories([]);
+    window.localStorage.removeItem("keywordHistories");
+  }
+  function handleKeywordHistories(string) {
+    let keywords = [string, ...keywordHistories];
+    if (keywords.length > 3) {
+      keywords.splice(3, 1);
+    }
+    setKeywordHistories(keywords);
+    window.localStorage.setItem("keywordHistories", JSON.stringify(keywords));
   }
 
   useEffect(() => {
@@ -333,6 +356,7 @@ function Header() {
             if (e.key === "Enter") {
               navigate(`/?keyword=${inputValue}`);
               setSearchToggle(false);
+              handleKeywordHistories(inputValue);
             }
           }}
           searchToggle={searchToggle}
@@ -342,12 +366,12 @@ function Header() {
         />
         <SearchHistorys style={{ display: searchToggle ? "block" : "none" }}>
           <HsitoryTitle>
-            最近搜尋<HsitoryDelete>刪除全部</HsitoryDelete>
+            最近搜尋
+            <HsitoryDelete onClick={handleDeleteAll}>刪除全部</HsitoryDelete>
           </HsitoryTitle>
-          {searchRecodes.map((value, index) => (
-            <SearchHistory>
+          {keywordHistories.map((value, index) => (
+            <SearchHistory key={index}>
               <SearchLink
-                key={index}
                 onClick={() => {
                   window.scrollTo({
                     top: 0,
@@ -359,7 +383,7 @@ function Header() {
               >
                 {value}
               </SearchLink>
-              <SearchDelete src={delect} />
+              <SearchDelete src={delect} onClick={() => handleDelete(index)} />
             </SearchHistory>
           ))}
         </SearchHistorys>
