@@ -1,11 +1,11 @@
-import { createContext, useState } from 'react';
+import { createContext, useState } from "react";
 
 export const CartContext = createContext({
   cartItems: [],
   setCartItems: () => {},
 });
 
-const STORAGE_KEY = 'cartItems';
+const STORAGE_KEY = "cartItems";
 
 export const CartContextProvider = ({ children }) => {
   const [cartItems, _setCartItems] = useState(() => {
@@ -21,8 +21,7 @@ export const CartContextProvider = ({ children }) => {
         cartItems,
         setCartItems,
         cartCount: cartItems.reduce((total, item) => total + item.qty, 0),
-      }}
-    >
+      }}>
       {children}
     </CartContext.Provider>
   );

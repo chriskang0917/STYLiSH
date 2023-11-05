@@ -103,7 +103,7 @@ const SocialLink = styled.div`
   }
 `;
 
-const Copywright = styled.div`
+const Copyright = styled.div`
   margin-left: 30px;
   line-height: 17px;
   font-size: 12px;
@@ -136,7 +136,7 @@ function Footer() {
             <SocialLink key={index} icon={icon} />
           ))}
         </SocialLinks>
-        <Copywright>© 2022. All rights reserved.</Copywright>
+        <Copyright>© 2022. All rights reserved.</Copyright>
       </Content>
     </Wrapper>
   );

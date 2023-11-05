@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import ReactLoading from 'react-loading';
-import { Link, useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
-import api from '../../utils/api';
+import { useEffect, useState } from "react";
+import ReactLoading from "react-loading";
+import { Link, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
+import api from "../../utils/api";
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -101,8 +101,8 @@ function Products() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const keyword = searchParams.get('keyword');
-  const category = searchParams.get('category') || 'all';
+  const keyword = searchParams.get("keyword");
+  const category = searchParams.get("category") || "all";
 
   useEffect(() => {
     let nextPaging = 0;
@@ -135,10 +135,10 @@ function Products() {
 
     fetchProducts();
 
-    window.addEventListener('scroll', scrollHandler);
+    window.addEventListener("scroll", scrollHandler);
 
     return () => {
-      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener("scroll", scrollHandler);
     };
   }, [keyword, category]);
 
