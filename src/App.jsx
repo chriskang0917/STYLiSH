@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import { Reset } from "styled-reset";
 import Chat from "./components/Chat";
@@ -33,7 +33,11 @@ const ChatContainer = styled.div`
   right: 90px;
   z-index: 999;
 `;
+
 function App() {
+  const location = useLocation();
+  const pathName = location.pathname;
+
   return (
     <>
       <Reset />
@@ -42,9 +46,12 @@ function App() {
         <CartContextProvider>
           <Header />
           <Outlet />
-          <ChatContainer>
-            <Chat />
-          </ChatContainer>
+          {pathName !== "/chatpage" && (
+            <ChatContainer>
+              <Chat />
+            </ChatContainer>
+          )}
+
           <Footer />
         </CartContextProvider>
       </AuthContextProvider>
