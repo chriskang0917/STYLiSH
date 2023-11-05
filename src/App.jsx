@@ -1,10 +1,12 @@
-import { Outlet } from 'react-router-dom';
-import { createGlobalStyle } from 'styled-components';
-import { Reset } from 'styled-reset';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import { AuthContextProvider } from './context/authContext';
-import { CartContextProvider } from './context/cartContext';
+import * as React from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
+import { Reset } from "styled-reset";
+import Chat from "./components/Chat";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import { AuthContextProvider } from "./context/authContext";
+import { CartContextProvider } from "./context/cartContext";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -25,8 +27,17 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `;
+const ChatContainer = styled.div`
+  position: fixed;
+  bottom: 90px;
+  right: 90px;
+  z-index: 999;
+`;
 
 function App() {
+  const location = useLocation();
+  const pathName = location.pathname;
+
   return (
     <>
       <Reset />
@@ -35,6 +46,12 @@ function App() {
         <CartContextProvider>
           <Header />
           <Outlet />
+          {pathName !== "/chatpage" && (
+            <ChatContainer>
+              <Chat />
+            </ChatContainer>
+          )}
+
           <Footer />
         </CartContextProvider>
       </AuthContextProvider>

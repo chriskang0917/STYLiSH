@@ -1,5 +1,5 @@
-const TAPPAY_SCRIPT_ID = 'tappay-sdk';
-const TAPPAY_SCRIPT_SRC = 'https://js.tappaysdk.com/tpdirect/v5.8.0';
+const TAPPAY_SCRIPT_ID = "tappay-sdk";
+const TAPPAY_SCRIPT_SRC = "https://js.tappaysdk.com/tpdirect/v5.8.0";
 
 function insertTappayScript() {
   return new Promise((resolve) => {
@@ -7,10 +7,10 @@ function insertTappayScript() {
       resolve();
       return;
     }
-    const tappayScriptTag = document.createElement('script');
-    tappayScriptTag.setAttribute('id', TAPPAY_SCRIPT_ID);
-    tappayScriptTag.setAttribute('src', TAPPAY_SCRIPT_SRC);
-    tappayScriptTag.addEventListener('load', resolve);
+    const tappayScriptTag = document.createElement("script");
+    tappayScriptTag.setAttribute("id", TAPPAY_SCRIPT_ID);
+    tappayScriptTag.setAttribute("src", TAPPAY_SCRIPT_SRC);
+    tappayScriptTag.addEventListener("load", resolve);
     document.head.appendChild(tappayScriptTag);
   });
 }
@@ -21,7 +21,7 @@ const tappay = {
     window.TPDirect.setupSDK(
       import.meta.env.VITE_TAPPAY_ID,
       import.meta.env.VITE_TAPPAY_KEY,
-      'sandbox'
+      "sandbox"
     );
   },
   setupCard(numberElement, expirationDateElement, ccvElement) {
@@ -29,23 +29,23 @@ const tappay = {
       fields: {
         number: {
           element: numberElement,
-          placeholder: '**** **** **** ****',
+          placeholder: "**** **** **** ****",
         },
         expirationDate: {
           element: expirationDateElement,
-          placeholder: 'MM / YY',
+          placeholder: "MM / YY",
         },
         ccv: {
           element: ccvElement,
-          placeholder: '後三碼',
+          placeholder: "後三碼",
         },
       },
       styles: {
-        '.valid': {
-          color: 'green',
+        ".valid": {
+          color: "green",
         },
-        '.invalid': {
-          color: 'red',
+        ".invalid": {
+          color: "red",
         },
       },
     });
