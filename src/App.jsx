@@ -1,4 +1,3 @@
-import { NextUIProvider } from "@nextui-org/system";
 import * as React from "react";
 import { Outlet } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
@@ -37,20 +36,18 @@ const ChatContainer = styled.div`
 function App() {
   return (
     <>
-      <NextUIProvider>
-        <Reset />
-        <GlobalStyle />
-        <AuthContextProvider>
-          <CartContextProvider>
-            <Header />
-            <Outlet />
-            <ChatContainer>
-              <Chat />
-            </ChatContainer>
-            <Footer />
-          </CartContextProvider>
-        </AuthContextProvider>
-      </NextUIProvider>
+      <Reset />
+      <GlobalStyle />
+      <AuthContextProvider>
+        <CartContextProvider>
+          <Header />
+          <Outlet />
+          <ChatContainer>
+            <Chat />
+          </ChatContainer>
+          <Footer />
+        </CartContextProvider>
+      </AuthContextProvider>
     </>
   );
 }
