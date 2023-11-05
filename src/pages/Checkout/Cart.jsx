@@ -235,9 +235,9 @@ function Cart() {
     <>
       <Header>
         <ItemCount>購物車({cartItems.length})</ItemCount>
-        <Quantity hideOnMobile>數量</Quantity>
-        <UnitPrice hideOnMobile>單價</UnitPrice>
-        <Price hideOnMobile>小計</Price>
+        <Quantity hideonmobile="true">數量</Quantity>
+        <UnitPrice hideonmobile="true">單價</UnitPrice>
+        <Price hideonmobile="true">小計</Price>
         <Empty />
       </Header>
       <Items>

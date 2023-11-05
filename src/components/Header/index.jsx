@@ -7,6 +7,8 @@ import cartMobile from "./cart-mobile.png";
 import cart from "./cart.png";
 import deleteHover from "./close-hover.png";
 import deleteIcon from "./close.png";
+import clockMobile from "./clock-mobile.png";
+import clock from "./clock.png";
 import logo from "./logo.png";
 import profileMobile from "./profile-mobile.png";
 import profile from "./profile.png";
@@ -46,7 +48,7 @@ const Logo = styled(Link)`
 `;
 
 const CategoryLinks = styled.div`
-  margin: 16px 0 0 57px;
+  margin: 16px 0 0 10px;
 
   @media screen and (max-width: 1279px) {
     margin: 0;
@@ -62,7 +64,8 @@ const CategoryLinks = styled.div`
 
 const CategoryLink = styled.a`
   font-size: 20px;
-  letter-spacing: 30px;
+
+  letter-spacing: 25px;
   padding-left: 39px;
   padding-right: 11px;
   position: relative;
@@ -110,6 +113,7 @@ const SearchBoard = styled.div`
 `;
 const SearchInput = styled.input`
   height: 40px;
+
   width: 214px;
   border: none;
   outline: none;
@@ -131,6 +135,7 @@ const SearchInput = styled.input`
     right: 16px;
     background-size: 32px;
     background-position: right center;
+    flex: 1;
   }
 `;
 
@@ -196,6 +201,14 @@ const PageLinkCartIcon = styled(PageLinkIcon)`
   }
 `;
 
+const PageLinkHistoryIcon = styled(PageLinkIcon)`
+  background-image: url(${clock});
+
+  @media screen and (max-width: 1279px) {
+    background-image: url(${clockMobile});
+  }
+`;
+
 const PageLinkProfileIcon = styled(PageLinkIcon)`
   background-image: url(${({ url }) => url ?? profile});
   border-radius: 50%;
@@ -224,6 +237,11 @@ const PageLinkText = styled.div`
   @media screen and (max-width: 1279px) {
     display: block;
     color: white;
+  }
+  @media screen and (max-width: 479px) {
+    display: block;
+    color: white;
+    font-size: 14px;
   }
 `;
 const SearchHistories = styled.ul`
@@ -349,6 +367,31 @@ function Header() {
     if (category) setInputValue("");
   }, [category]);
 
+  const handleLinkClick = async () => {
+    try {
+      const response = await fetch("/api/add-browse-record", {
+        //實際api
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`, //api中token
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: `${api.hostname}/products/details?id=${id}`, //實際點擊商品url
+          timestamp: Date.now(),
+        }),
+      });
+
+      if (response.ok) {
+        console.log("瀏覽紀錄已更新");
+      } else {
+        console.error("發生錯誤");
+      }
+    } catch (error) {
+      console.error("錯誤: " + error);
+    }
+  };
+
   return (
     <Wrapper>
       <Logo to="/" />
@@ -415,6 +458,10 @@ function Header() {
         </SearchHistories>
       </SearchBoard>
       <PageLinks>
+        <PageLink to="/history" id="linkToRecord" onClick={handleLinkClick}>
+          <PageLinkHistoryIcon icon={clock} />
+          <PageLinkText>瀏覽紀錄</PageLinkText>
+        </PageLink>
         <PageLink to="/checkout">
           <PageLinkCartIcon icon={cart}>
             <PageLinkIconNumber>{cartCount}</PageLinkIconNumber>

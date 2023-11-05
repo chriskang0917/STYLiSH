@@ -1,6 +1,8 @@
+import * as React from "react";
 import { Outlet } from "react-router-dom";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { Reset } from "styled-reset";
+import Chat from "./components/Chat";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { AuthContextProvider } from "./context/authContext";
@@ -25,7 +27,12 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `;
-
+const ChatContainer = styled.div`
+  position: fixed;
+  bottom: 90px;
+  right: 90px;
+  z-index: 999;
+`;
 function App() {
   return (
     <>
@@ -35,6 +42,9 @@ function App() {
         <CartContextProvider>
           <Header />
           <Outlet />
+          <ChatContainer>
+            <Chat />
+          </ChatContainer>
           <Footer />
         </CartContextProvider>
       </AuthContextProvider>
