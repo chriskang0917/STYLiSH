@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./App";
 import "./index.css";
-import ChatRoom from "./pages/ChatRoom";
+import ChatAdmin from "./pages/ChatRoom/ChatAdmin";
 import Checkout from "./pages/Checkout";
 import History from "./pages/History";
 import Home from "./pages/Home";
@@ -22,7 +22,7 @@ root.render(
         <Route path="thankyou" element={<ThankYou />} />
         <Route path="profile" element={<Profile />} />
         <Route path="history" element={<History />} />
-        <Route path="chatroom" element={<ChatRoom />} />
+        <Route path="chatadmin" element={<ChatAdmin />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

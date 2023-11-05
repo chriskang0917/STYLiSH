@@ -30,8 +30,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 const ChatContainer = styled.div`
   position: fixed;
-  bottom: 150px;
-  right: 50px;
+  bottom: 90px;
+  right: 90px;
   z-index: 999;
 `;
 function App() {

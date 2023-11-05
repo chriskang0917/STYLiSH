@@ -28,43 +28,16 @@ opacity: 1;
 z-index:-4
 }
 `;
-const ChatContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  height: 550px;
-  margin: 10px auto;
-  border: 1px solid #313538;
-  border-radius: 8px;
-  justify-centent: center;
-  position:relative;
-  background-color:#fff;
- 
 
-  &:before,&:after {
-    content: '';
-    border: solid transparent;
-    content: "";
-    width: 0;
-    height: 0;
-    position: absolute;
-  }
-  &:after{ border-width: 10px 10px 0 10px;
-    border-top-color: #fff;
-    top: 548px;
-    right: 38px;}
-  &:before{border-width: 12px 12px 0 12px;
-    border-top-color: #313538; 
-    position: absolute;
-    top: 548px;
-    right: 36px;}
+const ChatContainerMobile = styled.div`
+display: block;
+flex-direction: column;
 
-    opacity: 0;
-   
-    animation: ${fadeIn} 0.3s ease-in-out forwards;
-   
+width: 100%;
+height: 400px;
+margin: 10px auto;
+
 `;
-
 const Message = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -138,7 +111,7 @@ const Line = styled.div`
   margin:auto auto;
 `;
 
-function Chat ()  {
+function Mobile ()  {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -161,7 +134,7 @@ function Chat ()  {
 
   return (
    
-    <ChatContainer>
+    <ChatContainerMobile>
       <Header>客 服 聊 聊</Header>
       <Line/>
       <ChatMessages>
@@ -183,10 +156,9 @@ function Chat ()  {
         <SendButton onClick={() => { handleSendMessage(); handleFocus(); }}>送出</SendButton>
       </SendArea>
     
-     </ChatContainer>
-    
-  
+     </ChatContainerMobile>
+     
   );
 };
 
-export default Chat;
+export default Mobile;

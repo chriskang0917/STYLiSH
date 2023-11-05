@@ -13,7 +13,7 @@ const Avatar = styled.img`
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 1200px;
+  width:80%;
   height: 60vh;
   margin: 10vh auto;
   border: 1px solid #ccc;
@@ -25,8 +25,8 @@ const Message = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 20px;
-  background-color: #ccc;
+  margin: 10px 0px;
+  background-color: #313538;
   color: #fff;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -36,21 +36,21 @@ const Message = styled.div`
   &:after {
     content: "";
     position: absolute;
-    left: 0;
+    right: -1;
     top: 50%;
     width: 0;
     height: 0;
-    border: 20px solid transparent;
-    border-right-color: #ccc;
-    border-left: 0;
+    border: 15px solid transparent;
+    border-left-color: #313538;
+    border-right: 0;
     border-top: 0;
     margin-top: -10px;
-    margin-left: -20px;
+    margin-right: -20px;
   }
 `;
 const MessageContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   margin-right: 20px;
 `;

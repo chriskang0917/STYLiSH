@@ -118,7 +118,7 @@ function History() {
     },
   ];
   return (
-    <HistoryContent>
+    <HistoryContent >
       <Header>
         <HistoryTitle>瀏覽紀錄</HistoryTitle>
       </Header>
