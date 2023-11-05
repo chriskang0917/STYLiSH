@@ -1,26 +1,33 @@
 import { io } from "socket.io-client";
 
-const host = "http://13.55.105.122:3000/";
-const socketIO = io(host);
+class Socket {
+  constructor(endpoint) {
+    this.isUser = true;
+    this.socket = io(endpoint);
+  }
 
-export const socket = {
-  isUser: true,
   receive(setMessage) {
-    socketIO.on("talk", (message) => {
+    this.socket.on("talk", (message) => {
       setMessage(message);
     });
-  },
+  }
+
   send(message) {
     const jwtToken = localStorage.getItem("jwtToken");
     const identity = this.isUser ? "user" : "admin";
-    const userIdentity = [identity, socketIO.id, jwtToken];
+    const userIdentity = [identity, this.socket.id, jwtToken];
 
-    socketIO.emit("talk", message, userIdentity);
-  },
+    this.socket.emit("talk", message, userIdentity);
+  }
+
   disconnect() {
-    socketIO.disconnect();
-  },
+    this.socket.disconnect();
+  }
+
   isAdmin() {
     this.isUser = false;
-  },
-};
+  }
+}
+
+const host = "http://13.55.105.122:3000/";
+export const socket = new Socket(host);
