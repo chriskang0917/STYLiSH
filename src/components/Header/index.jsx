@@ -6,7 +6,7 @@ import { CartContext } from "../../context/cartContext";
 import cartMobile from "./cart-mobile.png";
 import cart from "./cart.png";
 import deleteHover from "./close-hover.png";
-import delect from "./close.png";
+import deleteIcon from "./close.png";
 import logo from "./logo.png";
 import profileMobile from "./profile-mobile.png";
 import profile from "./profile.png";
@@ -226,7 +226,7 @@ const PageLinkText = styled.div`
     color: white;
   }
 `;
-const SearchHistorys = styled.ul`
+const SearchHistories = styled.ul`
   position: absolute;
   width: 214px;
   padding: 6px 10px 6px 10px;
@@ -248,7 +248,7 @@ const SearchHistory = styled.div`
   font-size: 20px;
   padding: 5px;
 `;
-const HsitoryTitle = styled.div`
+const HistoryTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -256,7 +256,7 @@ const HsitoryTitle = styled.div`
   padding-bottom: 5px;
   font-size: 20px;
 `;
-const HsitoryDelete = styled.div`
+const HistoryDelete = styled.div`
   background-color: transparent;
   font-size: 14px;
   color: #bababa;
@@ -363,8 +363,7 @@ function Header() {
                 behavior: "smooth",
               });
               navigate(`/?category=${name}`);
-            }}
-          >
+            }}>
             {displayText}
           </CategoryLink>
         ))}
@@ -383,11 +382,13 @@ function Header() {
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
         />
-        <SearchHistorys style={{ display: searchToggle ? "block" : "none" }}>
-          <HsitoryTitle>
+        <SearchHistories style={{ display: searchToggle ? "block" : "none" }}>
+          <HistoryTitle>
             搜尋紀錄
-            <HsitoryDelete onClick={handleDeleteAll}>刪除全部</HsitoryDelete>
-          </HsitoryTitle>
+            {keywordHistories.length !== 0 && (
+              <HistoryDelete onClick={handleDeleteAll}>刪除全部</HistoryDelete>
+            )}
+          </HistoryTitle>
           {keywordHistories.length === 0 ? (
             <SearchEmpty>最近無搜尋紀錄</SearchEmpty>
           ) : (
@@ -401,18 +402,17 @@ function Header() {
                     });
                     navigate(`/?keyword=${value}`);
                     setSearchToggle(!searchToggle);
-                  }}
-                >
+                  }}>
                   {value}
                 </SearchLink>
                 <SearchDelete
-                  src={delect}
+                  src={deleteIcon}
                   onClick={() => handleDelete(index)}
                 />
               </SearchHistory>
             ))
           )}
-        </SearchHistorys>
+        </SearchHistories>
       </SearchBoard>
       <PageLinks>
         <PageLink to="/checkout">
