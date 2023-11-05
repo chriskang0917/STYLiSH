@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./App";
-import Test from "./pages/Chat/Test";
 import Checkout from "./pages/Checkout";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
@@ -19,7 +18,6 @@ root.render(
         <Route path="checkout" element={<Checkout />} />
         <Route path="thankyou" element={<ThankYou />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="test" element={<Test />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
