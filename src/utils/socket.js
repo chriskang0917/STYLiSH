@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-class Socket {
+export class Socket {
   constructor(endpoint) {
     this.isUser = true;
     this.socket = io(endpoint);
@@ -28,6 +28,3 @@ class Socket {
     this.isUser = false;
   }
 }
-
-const host = "http://13.55.105.122:3000/";
-export const socket = new Socket(host);
