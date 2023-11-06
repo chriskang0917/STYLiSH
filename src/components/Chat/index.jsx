@@ -15,7 +15,6 @@ const PageLink = styled(Link)`
     justify-content: center;
     cursor: pointer;
   }
-
   & + & {
     margin-left: 42px;
 

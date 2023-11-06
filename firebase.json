@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "jolina-feature-chat-ui-new",
+    "site": "jolina-feature-history-api",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [

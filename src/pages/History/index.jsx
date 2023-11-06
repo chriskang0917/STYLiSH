@@ -1,8 +1,16 @@
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-// import api from '../../utils/api';
+import { AuthContext } from "../../context/authContext";
+import api from "../../utils/api";
 
 const HistoryContent = styled.div`
   margin: 20px auto;
+`;
+const Linkto = styled(Link)`
+  display: flex;
+  margin: auto auto;
+  text-decoration: none;
 `;
 const Header = styled.div`
   display: flex;
@@ -70,7 +78,9 @@ const ItemImage = styled.img`
   }
 `;
 
-const ItemName = styled.div``;
+const ItemName = styled(Link)`
+  text-decoration: none;
+`;
 
 const ItemID = styled.div``;
 
@@ -92,58 +102,86 @@ const ItemUnitPriceValue = styled.div`
     margin-top: 20px;
   }
 `;
+const BackToProductPage = styled.button`
+  width: 140px;
+  height: 32px;
+  background-color: #000;
+  cursor: pointer;
+  border: none;
 
+  display: flex;
+  margin: 30vh auto;
+`;
+
+const BackToProductPageA = styled.p`
+  color: #fff;
+  font-size: 15px;
+  line-height: 30px;
+  letter-spacing: 4px;
+  font-family: "Noto Sans TC", sans-serif;
+  margin: auto auto;
+`;
 function History() {
-  const historyData = [
-    {
-      id: "201807201824",
-      category: "女裝",
-      title: "前開衩扭結洋裝",
-      image: "https://api.appworks-school.tw/assets/201807201824/main.jpg",
-      price: "799",
-    },
-    {
-      id: "201807201824",
-      category: "女裝",
-      title: "前開衩扭結洋裝",
-      image: "https://api.appworks-school.tw/assets/201807201824/main.jpg",
-      price: "799",
-    },
-    {
-      id: "201807201824",
-      category: "女裝",
-      title: "前開衩扭結洋裝",
-      image: "https://api.appworks-school.tw/assets/201807201824/main.jpg",
-      price: "799",
-    },
-  ];
+  const [product, setProduct] = useState([]);
+
+  useEffect(() => {
+    async function getHistory() {
+      const { data } = await api.getHistory();
+      setProduct(data);
+    }
+    getHistory();
+  }, []);
+  const tokenLocalStorage = localStorage.getItem("jwtToken");
+  console.log(tokenLocalStorage);
+  const [loading, setLoading] = useState(false);
+  const { jwtToken, isLogin, login } = useContext(AuthContext);
   return (
-    <HistoryContent >
-      <Header>
-        <HistoryTitle>瀏覽紀錄</HistoryTitle>
-      </Header>
-      {historyData.map((item, index) => (
-        <Items hideOnMobile key={index}>
-          <Item>
-            <ItemImage src={item.image} />
-            <ItemName>{item.title}</ItemName>
-            <ItemCatagory>{item.category}</ItemCatagory>
-            <ItemID>{item.id}</ItemID>
-            <ItemUnitPriceValue>NT.{item.price}</ItemUnitPriceValue>
-          </Item>
-        </Items>
-      ))}
-      {historyData.map((item, index) => (
-        <ItemMobile hideOnDesktop>
-          <ItemImage src={item.image} />
-          <ItemDetails hideOnDesktop key={index}>
-            <ItemName>{item.title}</ItemName>
-            <ItemCatagory>{item.category}</ItemCatagory>
-            <ItemID>{item.id}</ItemID>
-            <ItemUnitPriceValue>NT.{item.price}</ItemUnitPriceValue>
-          </ItemDetails>
-        </ItemMobile>
-      ))}
+    <HistoryContent>
+      {jwtToken ? (
+        <>
+          <Header>
+            <HistoryTitle>瀏覽紀錄</HistoryTitle>
+          </Header>
+
+          {product.map((item, index) => (
+            <Items hideOnMobile key={index}>
+              <Item>
+                <ItemImage src={`https://handsomelai.shop${item.main_image}`} />
+                <ItemName key={item.id} to={`/products/${item.id}`}>
+                  {item.title}
+                </ItemName>
+                <ItemCatagory>{item.category}</ItemCatagory>
+                <ItemID>{item.id.toString()}</ItemID>
+                <ItemUnitPriceValue>
+                  NT.{item.price.toString()}
+                </ItemUnitPriceValue>
+              </Item>
+            </Items>
+          ))}
+
+          {product.map((item, index) => (
+            <ItemMobile hideOnDesktop>
+              <ItemImage src={`https://handsomelai.shop${item.main_image}`} />
+              <ItemDetails hideOnDesktop key={index}>
+                <ItemName key={item.id} to={`/products/${item.id}`}>
+                  {item.title}
+                </ItemName>
+                <ItemCatagory>{item.category}</ItemCatagory>
+                <ItemID>{item.id.toString()}</ItemID>
+                <ItemUnitPriceValue>
+                  NT.{item.price.toString()}
+                </ItemUnitPriceValue>
+              </ItemDetails>
+            </ItemMobile>
+          ))}
+        </>
+      ) : (
+        <BackToProductPage to="/profile">
+          <Linkto to="/profile">
+            <BackToProductPageA>移駕到登入頁</BackToProductPageA>
+          </Linkto>
+        </BackToProductPage>
+      )}
     </HistoryContent>
   );
 }

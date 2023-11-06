@@ -28,10 +28,6 @@ opacity: 1;
 z-index:-4
 }
 `;
-
-const ChatInnerContainer = styled.div`
-  width: 400px;
-`;
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,7 +39,6 @@ const ChatContainer = styled.div`
   justify-centent: center;
   position: relative;
   background-color: #fff;
-  overflow: scroll;
 
   &:before,
   &:after {
@@ -149,16 +144,13 @@ const Line = styled.div`
 function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const inputRef = useRef(null);
+
   const handleSendMessage = () => {
     if (newMessage.trim() === "") return;
     setMessages([...messages, { text: newMessage, user: "user" }]);
-    inputRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
     setNewMessage("");
   };
+  const inputRef = useRef(null);
 
   const handleFocus = () => {
     if (inputRef.current) {
@@ -172,35 +164,33 @@ function Chat() {
 
   return (
     <ChatContainer>
-      <ChatInnerContainer>
-        <Header>客 服 聊 聊</Header>
-        <Line />
-        <ChatMessages>
-          {messages.map((message, index) => (
-            <MessageContainer key={index}>
-              <Message>{message.text}</Message>
-              <Avatar />
-            </MessageContainer>
-          ))}
-        </ChatMessages>
-        <SendArea>
-          <ChatInput
-            type="text"
-            placeholder="請輸入訊息"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            ref={inputRef}
-          />
-          <SendButton
-            onClick={() => {
-              handleSendMessage();
-              handleFocus();
-            }}
-          >
-            送出
-          </SendButton>
-        </SendArea>
-      </ChatInnerContainer>
+      <Header>客 服 聊 聊</Header>
+      <Line />
+      <ChatMessages>
+        {messages.map((message, index) => (
+          <MessageContainer key={index}>
+            <Message>{message.text}</Message>
+            <Avatar />
+          </MessageContainer>
+        ))}
+      </ChatMessages>
+      <SendArea>
+        <ChatInput
+          type="text"
+          placeholder="請輸入訊息"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          ref={inputRef}
+        />
+        <SendButton
+          onClick={() => {
+            handleSendMessage();
+            handleFocus();
+          }}
+        >
+          送出
+        </SendButton>
+      </SendArea>
     </ChatContainer>
   );
 }

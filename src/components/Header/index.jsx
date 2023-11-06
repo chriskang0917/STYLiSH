@@ -314,6 +314,7 @@ const categories = [
   },
 ];
 function Header() {
+  const [userToken, setUserToken] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [searchToggle, setSearchToggle] = useState(false);
   const [keywordHistories, setKeywordHistories] = useState(
@@ -367,20 +368,25 @@ function Header() {
     if (category) setInputValue("");
   }, [category]);
 
+  useEffect(() => {
+    const tokenLocalStorage = localStorage.getItem("userToken");
+    if (tokenLocalStorage) {
+      setUserToken(tokenLocalStorage);
+    }
+  }, []);
+
   const handleLinkClick = async () => {
     try {
-      const response = await fetch("/api/add-browse-record", {
-        //實際api
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${userToken}`, //api中token
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: `${api.hostname}/products/details?id=${id}`,
-          timestamp: Date.now(),
-        }),
-      });
+      const response = await fetch(
+        "https://handsomelai.shop/api/products/details?={id}",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         console.log("瀏覽紀錄已更新");
