@@ -368,7 +368,7 @@ function Header() {
   }, [category]);
 
   useEffect(() => {
-    const tokenLocalStorage = localStorage.getItem("userToken");
+    const tokenLocalStorage = localStorage.getItem("jwtToken");
     if (tokenLocalStorage) {
       setUserToken(tokenLocalStorage);
     }

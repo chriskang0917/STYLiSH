@@ -25,6 +25,7 @@ export const AuthContextProvider = ({ children }) => {
     if (tokenFromLocalStorage) {
       setUser(parsedUser);
       setIsLogin(true);
+      setJwtToken(tokenFromLocalStorage);
 
       return tokenFromLocalStorage;
     }
