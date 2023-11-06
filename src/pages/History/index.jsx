@@ -108,9 +108,8 @@ const BackToProductPage = styled.button`
   background-color: #000;
   cursor: pointer;
   border: none;
-
+  margin: 30px auto;
   display: flex;
-  margin: 30vh auto;
 `;
 
 const BackToProductPageA = styled.p`
@@ -121,6 +120,26 @@ const BackToProductPageA = styled.p`
   font-family: "Noto Sans TC", sans-serif;
   margin: auto auto;
 `;
+const Notice = styled.div`
+  color: #ccc;
+  display: flex;
+  letter-spacing: 4px;
+  font-family: "Noto Sans TC", sans-serif;
+  margin: auto auto;
+`;
+const NoticeContent = styled.h1`
+  color: #ccc;
+  letter-spacing: 4px;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 20px;
+  margin: auto auto;
+`;
+
+const NoticeContainer = styled.div`
+  margin: 30vh auto;
+  display: block;
+`;
+
 function History() {
   const [product, setProduct] = useState([]);
 
@@ -176,11 +195,17 @@ function History() {
           ))}
         </>
       ) : (
-        <BackToProductPage to="/profile">
-          <Linkto to="/profile">
-            <BackToProductPageA>移駕到登入頁</BackToProductPageA>
-          </Linkto>
-        </BackToProductPage>
+        <NoticeContainer>
+          <Notice>
+            <NoticeContent>登入後即可查看瀏覽資訊！</NoticeContent>
+          </Notice>
+
+          <BackToProductPage to="/profile">
+            <Linkto to="/profile">
+              <BackToProductPageA>移駕到登入頁</BackToProductPageA>
+            </Linkto>
+          </BackToProductPage>
+        </NoticeContainer>
       )}
     </HistoryContent>
   );
