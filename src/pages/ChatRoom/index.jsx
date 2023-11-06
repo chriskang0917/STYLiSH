@@ -143,6 +143,7 @@ const Line = styled.div`
 `;
 
 function Chat() {
+  const listRef = useRef([]);
   const inputRef = useRef(null);
 
   const [messages, setMessages] = useState([]);
@@ -183,10 +184,14 @@ function Chat() {
       <Line />
       <ChatMessages>
         {messages.map((message, index) => (
-          <MessageContainer key={index}>
-            <Message>{message.text}</Message>
-            <Avatar />
-          </MessageContainer>
+          <div
+            key={index}
+            ref={(element) => (listRef.current[index] = element)}>
+            <MessageContainer key={index}>
+              <Message>{message.text}</Message>
+              <Avatar />
+            </MessageContainer>
+          </div>
         ))}
       </ChatMessages>
       <SendArea>
