@@ -378,7 +378,7 @@ function Header() {
   const handleLinkClick = async () => {
     try {
       const response = await fetch(
-        "https://handsomelai.shop/api/products/details?={id}",
+        "https://handsomelai.shop/api/products/details?id=161",
         {
           method: "GET",
           headers: {

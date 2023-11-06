@@ -132,7 +132,7 @@ function History() {
     getHistory();
   }, []);
   const tokenLocalStorage = localStorage.getItem("jwtToken");
-  console.log(tokenLocalStorage);
+
   const [loading, setLoading] = useState(false);
   const { jwtToken, isLogin, login } = useContext(AuthContext);
   return (
