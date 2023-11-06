@@ -9,6 +9,7 @@ import clockMobile from "./clock-mobile.png";
 import clock from "./clock.png";
 import deleteHover from "./close-hover.png";
 import deleteIcon from "./close.png";
+import login from "./login-profile.jpeg";
 import logo from "./logo.png";
 import profileMobile from "./profile-mobile.png";
 import profile from "./profile.png";
@@ -113,11 +114,9 @@ const SearchBoard = styled.div`
 `;
 const SearchInput = styled.input`
   height: 40px;
-
   width: 214px;
   border: none;
   outline: none;
-  /* margin-left: auto; */
   border-radius: 20px;
   padding: 6px 45px 6px 20px;
   border: solid 1px #979797;
@@ -210,7 +209,7 @@ const PageLinkHistoryIcon = styled(PageLinkIcon)`
 `;
 
 const PageLinkProfileIcon = styled(PageLinkIcon)`
-  background-image: url(${({ url }) => url ?? profile});
+  background-image: url(${({ $isLogin }) => ($isLogin ? login : profile)});
   border-radius: 50%;
 
   @media screen and (max-width: 1279px) {
@@ -320,7 +319,7 @@ function Header() {
   const [keywordHistories, setKeywordHistories] = useState(
     JSON.parse(window.localStorage.getItem("keywordHistories")) || []
   );
-  const { user } = useContext(AuthContext);
+  const { user, isLogin } = useContext(AuthContext);
   const { cartCount } = useContext(CartContext);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -412,8 +411,7 @@ function Header() {
                 behavior: "smooth",
               });
               navigate(`/?category=${name}`);
-            }}
-          >
+            }}>
             {displayText}
           </CategoryLink>
         ))}
@@ -452,8 +450,7 @@ function Header() {
                     });
                     navigate(`/?keyword=${value}`);
                     setSearchToggle(!searchToggle);
-                  }}
-                >
+                  }}>
                   {value}
                 </SearchLink>
                 <SearchDelete
@@ -477,7 +474,11 @@ function Header() {
           <PageLinkText>購物車</PageLinkText>
         </PageLink>
         <PageLink to="/profile">
-          <PageLinkProfileIcon icon={profile} url={user?.picture} />
+          <PageLinkProfileIcon
+            icon={profile}
+            $isLogin={isLogin}
+            url={user?.picture}
+          />
           <PageLinkText>會員</PageLinkText>
         </PageLink>
       </PageLinks>
