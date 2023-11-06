@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-export class Socket {
+class Socket {
   constructor(hostName) {
     this.socket = io(hostName);
     this.jwtToken = localStorage.getItem("jwtToken") || undefined;
@@ -27,3 +27,6 @@ export class Socket {
     this.socket.emit("talk", message, userIdentity);
   }
 }
+
+const hostName = "https://deercodeweb.com/";
+export const socket = new Socket(hostName);

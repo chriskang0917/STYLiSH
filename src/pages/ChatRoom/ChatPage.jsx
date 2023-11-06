@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Socket } from "../../utils/socket";
+import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 
 const ChatContainer = styled.div`
@@ -105,16 +105,13 @@ const SendArea = styled.form`
   justify-content: center;
 `;
 
-const hostName = "https://deercodeweb.com/";
-const socket = new Socket(hostName);
-
 function ChatAdmin() {
   const listRef = useRef([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    socket.connect();
+    socket.connect("user");
     socket.receive(setMessages);
   }, []);
 
