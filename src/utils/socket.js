@@ -15,7 +15,7 @@ export class Socket {
 
   receive(setMessage) {
     this.socket.on("talk", (message) => {
-      setMessage(message);
+      setMessage((prevMessages) => [...prevMessages, message]);
     });
     this.socket.on("user-check", (user) => {
       console.log("user-check: ", user);

@@ -1,17 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Socket } from "../../utils/socket";
 import profile from "./profile.png";
 
-const Avatar = styled.img`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin: 20px 30px;
-  border: 1px solid #ccc;
-  background-image: url(${profile});
-  background-position: center center;
-`;
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -21,6 +11,19 @@ const ChatContainer = styled.div`
   border: 1px solid #ccc;
   border-radius: 8px;
   justify-content: center;
+`;
+
+const ChatMessages = styled.div`
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+`;
+
+const MessageContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 50px;
 `;
 
 const Message = styled.div`
@@ -51,17 +54,14 @@ const Message = styled.div`
   }
 `;
 
-const MessageContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-right: 20px;
-`;
-
-const ChatMessages = styled.div`
-  flex-grow: 1;
-  padding: 10px;
-  overflow-y: auto;
+const Avatar = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 20px 30px;
+  border: 1px solid #ccc;
+  background-image: url(${profile});
+  background-position: center center;
 `;
 
 const ChatInput = styled.input`
@@ -120,7 +120,11 @@ function ChatAdmin() {
     if (newMessage.trim() === "") return;
 
     socket.send(newMessage);
-    setMessages([...messages, { text: newMessage, user: "user" }]);
+
+    setMessages([
+      ...messages,
+      { content: newMessage, isUser: true, sendTime: Date.now() },
+    ]);
     setNewMessage("");
   };
 
@@ -132,7 +136,7 @@ function ChatAdmin() {
             key={index}
             ref={(element) => (listRef.current[index] = element)}>
             <MessageContainer>
-              <Message>{message.text}</Message>
+              <Message>{message.content}</Message>
               <Avatar src={message.avatarUrl} />
             </MessageContainer>
           </div>
