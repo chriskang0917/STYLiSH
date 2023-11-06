@@ -105,7 +105,7 @@ const SendArea = styled.form`
   justify-content: center;
 `;
 
-function ChatAdmin() {
+function Chat() {
   const listRef = useRef([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -165,4 +165,4 @@ function ChatAdmin() {
   );
 }
 
-export default ChatAdmin;
+export default Chat;
