@@ -53,7 +53,9 @@ const api = {
     return await response.json();
   },
   async getHistory(data) {
-    const response = await fetch(`https://handsomelai.shop/api/products`);
+    const response = await fetch(
+      `https://handsomelai.shop/api/user/browsingHistory`
+    );
 
     return await response.json();
   },

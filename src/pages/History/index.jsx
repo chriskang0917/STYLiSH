@@ -131,12 +131,12 @@ const NoticeContent = styled.h1`
   color: #ccc;
   letter-spacing: 4px;
   font-family: "Noto Sans TC", sans-serif;
-  font-size: 20px;
+  font-size: 30px;
   margin: auto auto;
 `;
 
 const NoticeContainer = styled.div`
-  margin: 30vh auto;
+  margin: 25vh auto;
   display: block;
 `;
 
