@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./App";
 import "./index.css";
+import ChatAdmin from "./pages/ChatAdmin";
 import ChatPage from "./pages/ChatRoom/ChatPage";
 import Checkout from "./pages/Checkout";
 import History from "./pages/History";
@@ -23,6 +24,7 @@ root.render(
         <Route path="profile" element={<Profile />} />
         <Route path="history" element={<History />} />
         <Route path="chatpage" element={<ChatPage />} />
+        <Route path="admin/chat" element={<ChatAdmin />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
