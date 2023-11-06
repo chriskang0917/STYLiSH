@@ -154,7 +154,8 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    listRef.current[listRef.current.length - 1]?.scrollIntoView({
+    const lastMessage = listRef.current[messages.length - 1];
+    lastMessage?.scrollIntoView({
       behavior: "smooth",
       block: "end",
       inline: "nearest",
