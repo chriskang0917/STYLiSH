@@ -142,7 +142,7 @@ function ChatAdmin() {
 
     setMessages([
       ...messages,
-      { content: newMessage, isUser: true, sendTime: Date.now() },
+      { content: newMessage, isUser: false, sendTime: Date.now() },
     ]);
     setNewMessage("");
   };
