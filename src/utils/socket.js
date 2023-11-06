@@ -1,30 +1,29 @@
 import { io } from "socket.io-client";
 
 export class Socket {
-  constructor(endpoint) {
-    this.isUser = true;
-    this.socket = io(endpoint);
+  constructor(hostName) {
+    this.socket = io(hostName);
+    this.jwtToken = localStorage.getItem("jwtToken") || undefined;
+  }
+
+  connect(identity = "user") {
+    this.user = identity;
+
+    const userIdentity = [identity, this.jwtToken];
+    this.socket.emit("user-check", userIdentity);
   }
 
   receive(setMessage) {
     this.socket.on("talk", (message) => {
       setMessage(message);
     });
+    this.socket.on("user-check", (user) => {
+      console.log("user-check: ", user);
+    });
   }
 
   send(message) {
-    const jwtToken = localStorage.getItem("jwtToken");
-    const identity = this.isUser ? "user" : "admin";
-    const userIdentity = [identity, this.socket.id, jwtToken];
-
+    const userIdentity = [this.user, this.jwtToken];
     this.socket.emit("talk", message, userIdentity);
-  }
-
-  disconnect() {
-    this.socket.disconnect();
-  }
-
-  isAdmin() {
-    this.isUser = false;
   }
 }
