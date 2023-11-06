@@ -18,6 +18,17 @@ export const AuthContextProvider = ({ children }) => {
   const [jwtToken, setJwtToken] = useState();
 
   const handleLoginResponse = useCallback(async (response) => {
+    const tokenFromLocalStorage = window.localStorage.getItem("jwtToken");
+    const userFromLocalStorage = window.localStorage.getItem("fb_profile");
+    const parsedUser = JSON.parse(userFromLocalStorage);
+
+    if (tokenFromLocalStorage) {
+      setUser(parsedUser);
+      setIsLogin(true);
+
+      return tokenFromLocalStorage;
+    }
+
     const accessToken = response.authResponse.accessToken;
     const { data } = await api.signin({
       provider: "facebook",
@@ -27,6 +38,7 @@ export const AuthContextProvider = ({ children }) => {
     setUser(userData);
     setJwtToken(tokenFromServer);
     window.localStorage.setItem("jwtToken", tokenFromServer);
+    window.localStorage.setItem("fb_profile", JSON.stringify(userData));
     setIsLogin(true);
     return tokenFromServer;
   }, []);
@@ -35,7 +47,8 @@ export const AuthContextProvider = ({ children }) => {
     const checkAuthStatus = async () => {
       await fb.init();
       const response = await fb.getLoginStatus();
-      if (response.status === "connected") {
+      const tokenFromLocalStorage = window.localStorage.getItem("jwtToken");
+      if (response.status === "connected" || tokenFromLocalStorage) {
         handleLoginResponse(response);
         setLoading(false);
       } else {
