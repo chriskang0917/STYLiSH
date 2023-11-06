@@ -10,7 +10,7 @@ const ChatContainer = styled.div`
   flex-direction: column;
   width: 80%;
   height: 60vh;
-  margin: 10vh auto;
+  margin: 4vh auto;
   border: 1px solid #ccc;
   border-radius: 8px;
   justify-content: center;
@@ -20,6 +20,14 @@ const ChatMessages = styled.div`
   flex-grow: 1;
   padding: 10px;
   overflow-y: auto;
+`;
+
+const Header = styled.h1`
+  font-size: 2rem;
+  text-align: center;
+  font-weight: 700;
+  margin: 20px auto 0;
+  color: #3f3a3a;
 `;
 
 const MessageContainer = styled.div`
@@ -157,38 +165,41 @@ function Chat() {
   };
 
   return (
-    <ChatContainer>
-      <ChatMessages>
-        {isLogin ? (
-          messages.map(({ content, isUser }, index) => (
-            <div
-              key={index}
-              ref={(element) => (listRef.current[index] = element)}>
-              <MessageContainer>
-                <Message>{content}</Message>
-                {!isUser && <AdminAvatar>客服</AdminAvatar>}
-                {isUser && <Avatar />}
-              </MessageContainer>
-            </div>
-          ))
-        ) : (
-          <Link to="/profile">
-            <LoginButton>請先登入再詢問</LoginButton>
-          </Link>
+    <>
+      <Header>客 服 聊 聊</Header>
+      <ChatContainer>
+        <ChatMessages>
+          {isLogin ? (
+            messages.map(({ content, isUser }, index) => (
+              <div
+                key={index}
+                ref={(element) => (listRef.current[index] = element)}>
+                <MessageContainer>
+                  <Message>{content}</Message>
+                  {!isUser && <AdminAvatar>客服</AdminAvatar>}
+                  {isUser && <Avatar />}
+                </MessageContainer>
+              </div>
+            ))
+          ) : (
+            <Link to="/profile">
+              <LoginButton>請先登入再詢問</LoginButton>
+            </Link>
+          )}
+        </ChatMessages>
+        {isLogin && (
+          <SendArea>
+            <ChatInput
+              type="text"
+              placeholder="請輸入訊息"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <SendButton onClick={handleSendMessage}>送出</SendButton>
+          </SendArea>
         )}
-      </ChatMessages>
-      {isLogin && (
-        <SendArea>
-          <ChatInput
-            type="text"
-            placeholder="請輸入訊息"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <SendButton onClick={handleSendMessage}>送出</SendButton>
-        </SendArea>
-      )}
-    </ChatContainer>
+      </ChatContainer>
+    </>
   );
 }
 

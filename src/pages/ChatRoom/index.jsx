@@ -14,6 +14,17 @@ const Avatar = styled.img`
   background-position: center center;
 `;
 
+const AdminAvatar = styled.div`
+  width: 60px;
+  height: 60px;
+  padding-top: 20px;
+  text-align: center;
+  letter-spacing: 2px;
+  border-radius: 50%;
+  margin: 20px 30px;
+  border: 1px solid #ccc;
+`;
+
 const Header = styled.p`
   font-size: 20px;
   text-align: center;
@@ -131,7 +142,7 @@ const SendButton = styled.button`
   cursor: pointer;
   border-radius: 10px;
 `;
-const SendArea = styled.div`
+const SendArea = styled.form`
   display: flex;
   gap: 20px;
   margin-bottom: 20px;
@@ -180,7 +191,9 @@ function Chat() {
     });
   }, [newMessage]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (event) => {
+    event.preventDefault();
+
     if (newMessage.trim() === "") return;
     setMessages([
       ...messages,
@@ -202,13 +215,14 @@ function Chat() {
         <>
           <Line />
           <ChatMessages>
-            {messages.map((message, index) => (
+            {messages.map(({ content, isUser }, index) => (
               <div
                 key={index}
                 ref={(element) => (listRef.current[index] = element)}>
                 <MessageContainer key={index}>
-                  <Message>{message.text}</Message>
-                  <Avatar />
+                  <Message>{content}</Message>
+                  {!isUser && <AdminAvatar>客服</AdminAvatar>}
+                  {isUser && <Avatar />}
                 </MessageContainer>
               </div>
             ))}
@@ -222,8 +236,8 @@ function Chat() {
               ref={inputRef}
             />
             <SendButton
-              onClick={() => {
-                handleSendMessage();
+              onClick={(event) => {
+                handleSendMessage(event);
                 handleFocus();
               }}>
               送出
