@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { Socket } from "../../utils/socket";
 import profile from "./profile.png";
 
 const ChatContainer = styled.div`
@@ -62,6 +63,17 @@ const Avatar = styled.img`
   border: 1px solid #ccc;
   background-image: url(${profile});
   background-position: center center;
+`;
+
+const AdminAvatar = styled.div`
+  width: 60px;
+  height: 60px;
+  padding-top: 20px;
+  text-align: center;
+  letter-spacing: 2px;
+  border-radius: 50%;
+  margin: 20px 30px;
+  border: 1px solid #ccc;
 `;
 
 const ChatInput = styled.input`
@@ -131,13 +143,14 @@ function ChatAdmin() {
   return (
     <ChatContainer>
       <ChatMessages>
-        {messages.map((message, index) => (
+        {messages.map(({ content, isUser }, index) => (
           <div
             key={index}
             ref={(element) => (listRef.current[index] = element)}>
             <MessageContainer>
-              <Message>{message.content}</Message>
-              <Avatar src={message.avatarUrl} />
+              <Message>{content}</Message>
+              {!isUser && <AdminAvatar>客服</AdminAvatar>}
+              {isUser && <Avatar />}
             </MessageContainer>
           </div>
         ))}
