@@ -5,10 +5,10 @@ import { AuthContext } from "../../context/authContext";
 import { CartContext } from "../../context/cartContext";
 import cartMobile from "./cart-mobile.png";
 import cart from "./cart.png";
-import deleteHover from "./close-hover.png";
-import deleteIcon from "./close.png";
 import clockMobile from "./clock-mobile.png";
 import clock from "./clock.png";
+import deleteHover from "./close-hover.png";
+import deleteIcon from "./close.png";
 import logo from "./logo.png";
 import profileMobile from "./profile-mobile.png";
 import profile from "./profile.png";
@@ -314,6 +314,7 @@ const categories = [
   },
 ];
 function Header() {
+  const [userToken, setUserToken] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [searchToggle, setSearchToggle] = useState(false);
   const [keywordHistories, setKeywordHistories] = useState(
@@ -367,20 +368,25 @@ function Header() {
     if (category) setInputValue("");
   }, [category]);
 
+  useEffect(() => {
+    const tokenLocalStorage = localStorage.getItem("userToken");
+    if (tokenLocalStorage) {
+      setUserToken(tokenLocalStorage);
+    }
+  }, []);
+
   const handleLinkClick = async () => {
     try {
-      const response = await fetch("/api/add-browse-record", {
-        //實際api
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${userToken}`, //api中token
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: `${api.hostname}/products/details?id=${id}`, //實際點擊商品url
-          timestamp: Date.now(),
-        }),
-      });
+      const response = await fetch(
+        "https://handsomelai.shop/api/products/details?id=161",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         console.log("瀏覽紀錄已更新");
@@ -406,7 +412,8 @@ function Header() {
                 behavior: "smooth",
               });
               navigate(`/?category=${name}`);
-            }}>
+            }}
+          >
             {displayText}
           </CategoryLink>
         ))}
@@ -445,7 +452,8 @@ function Header() {
                     });
                     navigate(`/?keyword=${value}`);
                     setSearchToggle(!searchToggle);
-                  }}>
+                  }}
+                >
                   {value}
                 </SearchLink>
                 <SearchDelete
