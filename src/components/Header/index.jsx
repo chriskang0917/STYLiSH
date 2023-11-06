@@ -5,10 +5,10 @@ import { AuthContext } from "../../context/authContext";
 import { CartContext } from "../../context/cartContext";
 import cartMobile from "./cart-mobile.png";
 import cart from "./cart.png";
-import deleteHover from "./close-hover.png";
-import deleteIcon from "./close.png";
 import clockMobile from "./clock-mobile.png";
 import clock from "./clock.png";
+import deleteHover from "./close-hover.png";
+import deleteIcon from "./close.png";
 import logo from "./logo.png";
 import profileMobile from "./profile-mobile.png";
 import profile from "./profile.png";
@@ -377,7 +377,7 @@ function Header() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          url: `${api.hostname}/products/details?id=${id}`, //實際點擊商品url
+          url: `${api.hostname}/products/details?id=${id}`,
           timestamp: Date.now(),
         }),
       });
@@ -406,7 +406,8 @@ function Header() {
                 behavior: "smooth",
               });
               navigate(`/?category=${name}`);
-            }}>
+            }}
+          >
             {displayText}
           </CategoryLink>
         ))}
@@ -445,7 +446,8 @@ function Header() {
                     });
                     navigate(`/?keyword=${value}`);
                     setSearchToggle(!searchToggle);
-                  }}>
+                  }}
+                >
                   {value}
                 </SearchLink>
                 <SearchDelete

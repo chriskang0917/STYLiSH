@@ -13,7 +13,7 @@ const Avatar = styled.img`
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width:80%;
+  width: 80%;
   height: 60vh;
   margin: 10vh auto;
   border: 1px solid #ccc;

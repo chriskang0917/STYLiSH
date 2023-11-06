@@ -12,11 +12,11 @@ const Avatar = styled.img`
 `;
 
 const Header = styled.p`
-font-size: 20px;
-text-align: center;
+  font-size: 20px;
+  text-align: center;
 
-margin:20px auto;
-color:#3f3a3a;
+  margin: 20px auto;
+  color: #3f3a3a;
 `;
 const fadeIn = keyframes`
 from {
@@ -28,6 +28,10 @@ opacity: 1;
 z-index:-4
 }
 `;
+
+const ChatInnerContainer = styled.div`
+  width: 400px;
+`;
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,32 +41,36 @@ const ChatContainer = styled.div`
   border: 1px solid #313538;
   border-radius: 8px;
   justify-centent: center;
-  position:relative;
-  background-color:#fff;
- 
+  position: relative;
+  background-color: #fff;
+  overflow: scroll;
 
-  &:before,&:after {
-    content: '';
+  &:before,
+  &:after {
+    content: "";
     border: solid transparent;
     content: "";
     width: 0;
     height: 0;
     position: absolute;
   }
-  &:after{ border-width: 10px 10px 0 10px;
+  &:after {
+    border-width: 10px 10px 0 10px;
     border-top-color: #fff;
     top: 548px;
-    right: 38px;}
-  &:before{border-width: 12px 12px 0 12px;
-    border-top-color: #313538; 
+    right: 38px;
+  }
+  &:before {
+    border-width: 12px 12px 0 12px;
+    border-top-color: #313538;
     position: absolute;
     top: 548px;
-    right: 36px;}
+    right: 36px;
+  }
 
-    opacity: 0;
-   
-    animation: ${fadeIn} 0.3s ease-in-out forwards;
-   
+  opacity: 0;
+
+  animation: ${fadeIn} 0.3s ease-in-out forwards;
 `;
 
 const Message = styled.div`
@@ -132,61 +140,69 @@ const SendArea = styled.div`
   justify-content: center;
 `;
 const Line = styled.div`
-  width:300px;
-  height:2px;
-  background-color:#ccc;
-  margin:auto auto;
+  width: 300px;
+  height: 2px;
+  background-color: #ccc;
+  margin: auto auto;
 `;
 
-function Chat ()  {
+function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-
+  const inputRef = useRef(null);
   const handleSendMessage = () => {
     if (newMessage.trim() === "") return;
     setMessages([...messages, { text: newMessage, user: "user" }]);
+    inputRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
     setNewMessage("");
   };
-  const inputRef = useRef(null);
 
   const handleFocus = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }
+  };
 
   useEffect(() => {
     //即時聊天
   }, []);
 
   return (
-   
     <ChatContainer>
-      <Header>客 服 聊 聊</Header>
-      <Line/>
-      <ChatMessages>
-        {messages.map((message, index) => (
-          <MessageContainer key={index}>
-            <Message>{message.text}</Message>
-            <Avatar />
-          </MessageContainer>
-        ))}
-      </ChatMessages>
-      <SendArea>
-        <ChatInput
-          type="text"
-          placeholder="請輸入訊息"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          ref={inputRef}
-        />
-        <SendButton onClick={() => { handleSendMessage(); handleFocus(); }}>送出</SendButton>
-      </SendArea>
-    
-     </ChatContainer>
-    
-  
+      <ChatInnerContainer>
+        <Header>客 服 聊 聊</Header>
+        <Line />
+        <ChatMessages>
+          {messages.map((message, index) => (
+            <MessageContainer key={index}>
+              <Message>{message.text}</Message>
+              <Avatar />
+            </MessageContainer>
+          ))}
+        </ChatMessages>
+        <SendArea>
+          <ChatInput
+            type="text"
+            placeholder="請輸入訊息"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            ref={inputRef}
+          />
+          <SendButton
+            onClick={() => {
+              handleSendMessage();
+              handleFocus();
+            }}
+          >
+            送出
+          </SendButton>
+        </SendArea>
+      </ChatInnerContainer>
+    </ChatContainer>
   );
-};
+}
 
 export default Chat;
