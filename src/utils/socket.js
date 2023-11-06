@@ -28,5 +28,5 @@ class Socket {
   }
 }
 
-const hostName = "https://deercodeweb.com/";
+const hostName = "https://handsomelai.shop/";
 export const socket = new Socket(hostName);
