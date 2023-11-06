@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
+import { AuthContext } from "../../context/authContext";
 import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 const Avatar = styled.img`
@@ -142,7 +144,22 @@ const Line = styled.div`
   margin: auto auto;
 `;
 
+const LoginButton = styled.button`
+  width: 150px;
+  height: 50px;
+  position: relative;
+  left: calc(50% - 75px);
+  letter-spacing: 2px;
+  background-color: #313538;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+`;
+
 function Chat() {
+  const { isLogin } = useContext(AuthContext);
+
   const listRef = useRef([]);
   const inputRef = useRef(null);
 
@@ -181,35 +198,43 @@ function Chat() {
   return (
     <ChatContainer>
       <Header>客 服 聊 聊</Header>
-      <Line />
-      <ChatMessages>
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            ref={(element) => (listRef.current[index] = element)}>
-            <MessageContainer key={index}>
-              <Message>{message.text}</Message>
-              <Avatar />
-            </MessageContainer>
-          </div>
-        ))}
-      </ChatMessages>
-      <SendArea>
-        <ChatInput
-          type="text"
-          placeholder="請輸入訊息"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          ref={inputRef}
-        />
-        <SendButton
-          onClick={() => {
-            handleSendMessage();
-            handleFocus();
-          }}>
-          送出
-        </SendButton>
-      </SendArea>
+      {isLogin ? (
+        <>
+          <Line />
+          <ChatMessages>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                ref={(element) => (listRef.current[index] = element)}>
+                <MessageContainer key={index}>
+                  <Message>{message.text}</Message>
+                  <Avatar />
+                </MessageContainer>
+              </div>
+            ))}
+          </ChatMessages>
+          <SendArea>
+            <ChatInput
+              type="text"
+              placeholder="請輸入訊息"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              ref={inputRef}
+            />
+            <SendButton
+              onClick={() => {
+                handleSendMessage();
+                handleFocus();
+              }}>
+              送出
+            </SendButton>
+          </SendArea>
+        </>
+      ) : (
+        <Link to="/profile">
+          <LoginButton>請先登入再詢問</LoginButton>
+        </Link>
+      )}
     </ChatContainer>
   );
 }

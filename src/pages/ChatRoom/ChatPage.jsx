@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { AuthContext } from "../../context/authContext";
 import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 
@@ -105,8 +107,24 @@ const SendArea = styled.form`
   justify-content: center;
 `;
 
+const LoginButton = styled.button`
+  width: 150px;
+  height: 50px;
+  position: relative;
+  left: calc(50% - 75px);
+  top: calc(50% - 25px);
+  letter-spacing: 2px;
+  background-color: #313538;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+`;
+
 function Chat() {
   const listRef = useRef([]);
+  const { isLogin } = useContext(AuthContext);
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -141,27 +159,35 @@ function Chat() {
   return (
     <ChatContainer>
       <ChatMessages>
-        {messages.map(({ content, isUser }, index) => (
-          <div
-            key={index}
-            ref={(element) => (listRef.current[index] = element)}>
-            <MessageContainer>
-              <Message>{content}</Message>
-              {!isUser && <AdminAvatar>客服</AdminAvatar>}
-              {isUser && <Avatar />}
-            </MessageContainer>
-          </div>
-        ))}
+        {isLogin ? (
+          messages.map(({ content, isUser }, index) => (
+            <div
+              key={index}
+              ref={(element) => (listRef.current[index] = element)}>
+              <MessageContainer>
+                <Message>{content}</Message>
+                {!isUser && <AdminAvatar>客服</AdminAvatar>}
+                {isUser && <Avatar />}
+              </MessageContainer>
+            </div>
+          ))
+        ) : (
+          <Link to="/profile">
+            <LoginButton>請先登入再詢問</LoginButton>
+          </Link>
+        )}
       </ChatMessages>
-      <SendArea>
-        <ChatInput
-          type="text"
-          placeholder="請輸入訊息"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-        />
-        <SendButton onClick={handleSendMessage}>送出</SendButton>
-      </SendArea>
+      {isLogin && (
+        <SendArea>
+          <ChatInput
+            type="text"
+            placeholder="請輸入訊息"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+          />
+          <SendButton onClick={handleSendMessage}>送出</SendButton>
+        </SendArea>
+      )}
     </ChatContainer>
   );
 }
