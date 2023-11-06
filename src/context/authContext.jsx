@@ -53,6 +53,7 @@ export const AuthContextProvider = ({ children }) => {
         setLoading(false);
       } else {
         window.localStorage.removeItem("jwtToken");
+        window.localStorage.removeItem("fb_profile");
         setLoading(false);
       }
     };
@@ -68,6 +69,7 @@ export const AuthContextProvider = ({ children }) => {
       return tokenFromServer;
     } else {
       window.localStorage.removeItem("jwtToken");
+      window.localStorage.removeItem("fb_profile");
       setLoading(false);
       return null;
     }
@@ -75,7 +77,6 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     setLoading(true);
-    await fb.logout();
     setIsLogin(false);
     setUser({});
     setJwtToken();
