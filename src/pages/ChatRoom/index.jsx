@@ -178,8 +178,20 @@ function Chat() {
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    socket.connect("user");
-    socket.receive(setMessages);
+    const getSortedHistory = (messages) => {
+      return [...messages].sort((a, b) => a.sendTime - b.sendTime);
+    };
+
+    const initChatHistory = async () => {
+      const { data: chatHistory } = await api.getChatHistory();
+      const messageHistories = getSortedHistory(chatHistory);
+      setMessages((prevMessages) => [...prevMessages, ...messageHistories]);
+
+      socket.connect("user");
+      socket.receive(setMessages);
+    };
+
+    initChatHistory();
   }, []);
 
   useEffect(() => {
