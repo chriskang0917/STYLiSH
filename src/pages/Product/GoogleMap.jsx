@@ -12,6 +12,7 @@ function GoogleMap() {
     let marker;
     let direactionService;
     let direactionRender;
+    let infoWindow;
     const map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 40.7128, lng: -74.006 },
       zoom: 10,
@@ -49,6 +50,38 @@ function GoogleMap() {
           });
         }
         marker.setPosition(selectRestaurant.location);
+        if (!direactionService) {
+          direactionService = new google.maps.DireactionsService();
+        }
+        if (!direactionRender) {
+          direactionRender = new google.maps.DireactionsRrender({ map: map });
+        }
+        direactionRender.set("direactions", null);
+        direactionService.route(
+          {
+            origin: new google.maps.Lating(
+              currentPosition.lat,
+              currentPosition.lng
+            ),
+            destination: {
+              placeId: selectRestaurant.placeId,
+            },
+            travelMode: "WALKING",
+          },
+          function (response, status) {
+            if (status === "OK") {
+              direactionRender.setDirections(response);
+              if (!infoWindow) {
+                infoWindow = new google.maps.InfoWindow();
+              }
+              infoWindow.setContent(
+                `<h3>${selectRestaurant.name}</h3>
+                `
+              );
+              infoWindow.open(map, maker);
+            }
+          }
+        );
       });
     });
   }, []);
