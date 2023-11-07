@@ -167,7 +167,7 @@ const StoryContent = styled.div`
   }
 `;
 
-const GoogleMap = styled(Story)``;
+const GoogleMapContainer = styled(Story)``;
 const GoogleMapTitle = styled(StoryTitle)``;
 const GoogleMapContent = styled(StoryContent)``;
 
@@ -389,11 +389,14 @@ function Product() {
         <Place>素材產地 / {product.place}</Place>
         <Place>加工產地 / {product.place}</Place>
       </Details>
-      <GoogleMap>
+      <GoogleMapContainer>
         <GoogleMapTitle>實體商店庫存</GoogleMapTitle>
         <GoogleMapContent>
           僅會顯示各店舖中，特定商品指定的顏色與尺寸數量。若有不確定的細節，請與客服確認。
         </GoogleMapContent>
+        <MapContainer style={{ marginTop: "24px" }}>
+          <GoogleMap mapTargetProduct={mapTargetProduct} />
+        </MapContainer>
         <ShopDetails>
           {FAKE_SHOP_STOCKS.shopStocks.map((shopStock) => (
             <ShopDetail key={shopStock.lat}>
@@ -411,7 +414,7 @@ function Product() {
             </ShopDetail>
           ))}
         </ShopDetails>
-      </GoogleMap>
+      </GoogleMapContainer>
       <Story>
         <StoryTitle>細部說明</StoryTitle>
         <StoryContent>{product.story}</StoryContent>
@@ -421,9 +424,6 @@ function Product() {
         {product.images.map((image, index) => (
           <Image src={`https://handsomelai.shop${image}`} key={index} />
         ))}
-        <MapContainer style={{ marginTop: "24px" }}>
-          <GoogleMap mapTargetProduct={mapTargetProduct} />
-        </MapContainer>
       </Images>
     </Wrapper>
   );

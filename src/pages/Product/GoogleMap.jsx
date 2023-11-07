@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
 import api from "../../utils/api";
+
+const Map = styled.div`
+  display: none;
+
+  @media screen and (min-width: 1279px) {
+    display: block;
+  }
+`;
 
 function GoogleMap({ mapTargetProduct }) {
   const [stock, setStock] = useState({});
@@ -117,7 +126,7 @@ function GoogleMap({ mapTargetProduct }) {
     });
   }, [stock]);
 
-  return <div id="map" style={{ width: "100%", height: "400px" }}></div>;
+  return <Map id="map" style={{ width: "100%", height: "400px" }}></Map>;
 }
 
 export default GoogleMap;
