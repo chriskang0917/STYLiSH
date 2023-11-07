@@ -19,12 +19,16 @@ class Socket {
     this.socket.emit("user-check", userIdentity);
   }
 
-  receive(setMessage) {
+  receive(setMessage, setJwtToken) {
     this.socket.on("talk", (message) => {
       setMessage((prevMessages) => [...prevMessages, message]);
     });
-    this.socket.on("user-check", (user) => {
-      console.log("user-check: ", user);
+    this.socket.on("user-check", (checkMessage) => {
+      console.log("user-check: ", checkMessage);
+      if (checkMessage[0] === "Notice admin user connect") {
+        // checkMessage = ["Notice admin user connect", "user connect", jwtToken]
+        setJwtToken(checkMessage[2]);
+      }
     });
   }
 

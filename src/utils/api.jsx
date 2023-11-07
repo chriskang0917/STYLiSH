@@ -1,6 +1,6 @@
 const api = {
   hostname: "https://api.appworks-school.tw/api/1.0",
-  // hostname: "https://handsomelai.shop/api",
+  laiHostname: "https://handsomelai.shop/api",
   async getProducts(category, paging) {
     const response = await fetch(
       `${this.hostname}/products/${category}?paging=${paging}`
@@ -33,13 +33,12 @@ const api = {
     return await response.json();
   },
   async signin(data) {
-    const response = await fetch(`${this.hostname}/user/signin`, {
-      // const response = await fetch(`https://handsomelai.shop/api/user/signin`, {
+    const response = await fetch(`${this.laiHostname}/user/signin`, {
+      method: "POST",
       body: JSON.stringify(data),
       headers: new Headers({
         "Content-Type": "application/json",
       }),
-      method: "POST",
     });
     return await response.json();
   },
@@ -52,9 +51,20 @@ const api = {
     });
     return await response.json();
   },
-  async getHistory(data) {
-    const response = await fetch(`https://handsomelai.shop/api/products`);
+  async getHistory() {
+    const response = await fetch(`${this.laiHostname}/products`);
+    return await response.json();
+  },
+  async getChatHistory(jwtToken) {
+    const userJwtToken = localStorage.getItem("jwtToken") || jwtToken;
 
+    const response = await fetch(`${this.laiHostname}/user/chat/history`, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({ jwtToken: userJwtToken }),
+    });
     return await response.json();
   },
 };

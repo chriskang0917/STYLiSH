@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import api from "../../utils/api";
 import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 
@@ -118,11 +119,26 @@ function ChatAdmin() {
   const listRef = useRef([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [userJwtToken, setUserJwtToken] = useState("");
 
   useEffect(() => {
     socket.connect("admin");
-    socket.receive(setMessages);
+    socket.receive(setMessages, setUserJwtToken);
   }, []);
+
+  useEffect(() => {
+    if (userJwtToken === "") return;
+
+    const getSortedMessages = (chatHistory) => {
+      return [...chatHistory].sort((a, b) => a.sendTime - b.sendTime);
+    };
+    const initChatHistory = async () => {
+      const { data: chatHistory } = await api.getChatHistory(userJwtToken);
+      setMessages(getSortedMessages(chatHistory));
+    };
+
+    initChatHistory();
+  }, [userJwtToken]);
 
   useEffect(() => {
     const lastMessage = listRef.current[messages.length - 1];
@@ -137,9 +153,7 @@ function ChatAdmin() {
     event.preventDefault();
 
     if (newMessage.trim() === "") return;
-
     socket.send(newMessage);
-
     setMessages([
       ...messages,
       { content: newMessage, isUser: false, sendTime: Date.now() },
