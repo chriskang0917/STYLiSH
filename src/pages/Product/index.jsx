@@ -168,6 +168,9 @@ const StoryContent = styled.div`
 
 const GoogleMap = styled(Story)``;
 const GoogleMapTitle = styled(StoryTitle)``;
+const GoogleMapContent = styled(StoryContent)``;
+
+const ShopDetails = styled.div``;
 
 const Images = styled.div`
   margin: 30px 0 0;
@@ -222,6 +225,10 @@ function Product() {
       </Details>
       <GoogleMap>
         <GoogleMapTitle>實體商店庫存</GoogleMapTitle>
+        <GoogleMapContent>
+          僅會顯示各店舖中，特定商品指定的顏色與尺寸數量。若有不確定的細節，請與客服確認。
+        </GoogleMapContent>
+        <ShopDetails></ShopDetails>
       </GoogleMap>
       <Story>
         <StoryTitle>細部說明</StoryTitle>
