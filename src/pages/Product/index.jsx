@@ -205,7 +205,7 @@ function Product() {
 
   return (
     <Wrapper>
-      <MainImage src={product.main_image} />
+      <MainImage src={`https://handsomelai.shop${product.main_image}`} />
       <Details>
         <Title>{product.title}</Title>
         <ID>{product.id}</ID>
@@ -223,7 +223,7 @@ function Product() {
       </Story>
       <Images>
         {product.images.map((image, index) => (
-          <Image src={image} key={index} />
+          <Image src={`https://handsomelai.shop${image}`} key={index} />
         ))}
       </Images>
     </Wrapper>

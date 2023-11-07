@@ -80,6 +80,7 @@ const ItemImage = styled.img`
 
 const ItemName = styled(Link)`
   text-decoration: none;
+  color: #8b572a;
 `;
 
 const ItemID = styled.div``;
@@ -92,7 +93,8 @@ const ItemDetails = styled.div`
   @media screen and (max-width: 1279px) {
     display: grid;
     margin-left: 20px;
-
+    height: 152px;
+    align-content: space-between;
     order: 1;
   }
 `;
@@ -131,12 +133,12 @@ const NoticeContent = styled.h1`
   color: #ccc;
   letter-spacing: 4px;
   font-family: "Noto Sans TC", sans-serif;
-  font-size: 20px;
+  font-size: 30px;
   margin: auto auto;
 `;
 
 const NoticeContainer = styled.div`
-  margin: 30vh auto;
+  margin: 25vh auto;
   display: block;
 `;
 
@@ -145,15 +147,16 @@ function History() {
 
   useEffect(() => {
     async function getHistory() {
-      const { data } = await api.getHistory();
-      setProduct(data);
+      const { records } = await api.getHistory();
+
+      setProduct(records);
     }
     getHistory();
   }, []);
+
   const tokenLocalStorage = localStorage.getItem("jwtToken");
 
-  const [loading, setLoading] = useState(false);
-  const { jwtToken, isLogin, login } = useContext(AuthContext);
+  const { jwtToken } = useContext(AuthContext);
   return (
     <HistoryContent>
       {jwtToken ? (
@@ -165,14 +168,16 @@ function History() {
           {product.map((item, index) => (
             <Items hideOnMobile key={index}>
               <Item>
-                <ItemImage src={`https://handsomelai.shop${item.main_image}`} />
-                <ItemName key={item.id} to={`/products/${item.id}`}>
-                  {item.title}
+                <ItemImage
+                  src={`https://handsomelai.shop${item.data.main_image}`}
+                />
+                <ItemName key={item.data.id} to={`/products/${item.data.id}`}>
+                  {item.data.title}
                 </ItemName>
-                <ItemCatagory>{item.category}</ItemCatagory>
-                <ItemID>{item.id.toString()}</ItemID>
+                <ItemCatagory>{item.data.category}</ItemCatagory>
+                <ItemID>id:{item.data.id.toString()}</ItemID>
                 <ItemUnitPriceValue>
-                  NT.{item.price.toString()}
+                  NT.{item.data.price.toString()}
                 </ItemUnitPriceValue>
               </Item>
             </Items>
@@ -180,15 +185,17 @@ function History() {
 
           {product.map((item, index) => (
             <ItemMobile hideOnDesktop>
-              <ItemImage src={`https://handsomelai.shop${item.main_image}`} />
+              <ItemImage
+                src={`https://handsomelai.shop${item.data.main_image}`}
+              />
               <ItemDetails hideOnDesktop key={index}>
-                <ItemName key={item.id} to={`/products/${item.id}`}>
-                  {item.title}
+                <ItemName key={item.data.id} to={`/products/${item.data.id}`}>
+                  {item.data.title}
                 </ItemName>
-                <ItemCatagory>{item.category}</ItemCatagory>
-                <ItemID>{item.id.toString()}</ItemID>
+                <ItemCatagory>{item.data.category}</ItemCatagory>
+                <ItemID>id:{item.data.id.toString()}</ItemID>
                 <ItemUnitPriceValue>
-                  NT.{item.price.toString()}
+                  NT.{item.data.price.toString()}
                 </ItemUnitPriceValue>
               </ItemDetails>
             </ItemMobile>
