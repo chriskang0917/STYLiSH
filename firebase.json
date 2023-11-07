@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "jolina-feature-google--map-marker",
+    "site": "jolina-feature--map-marker",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
