@@ -10,6 +10,8 @@ function GoogleMap() {
     const google = window.google;
     let currentPosition;
     let marker;
+    let direactionService;
+    let direactionRender;
     const map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 40.7128, lng: -74.006 },
       zoom: 10,
@@ -46,7 +48,7 @@ function GoogleMap() {
             map: map,
           });
         }
-        marker.setPosition;
+        marker.setPosition(selectRestaurant.location);
       });
     });
   }, []);
