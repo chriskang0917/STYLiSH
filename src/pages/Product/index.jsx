@@ -207,6 +207,16 @@ const Image = styled.img`
 function Product() {
   const [product, setProduct] = useState();
   const { id } = useParams();
+  const [mapTargetProduct, setMapTargetProduct] = useState({
+    color: "",
+    size: "",
+  });
+  const setMapTarget = (color, size) => {
+    setMapTargetProduct({
+      color: color,
+      size: size,
+    });
+  };
 
   useEffect(() => {
     async function getProduct() {
@@ -225,7 +235,11 @@ function Product() {
         <Title>{product.title}</Title>
         <ID>{product.id}</ID>
         <Price>TWD.{product.price}</Price>
-        <ProductVariants product={product} />
+        <ProductVariants
+          product={product}
+          mapTargetProduct={mapTargetProduct}
+          setMapTarget={setMapTarget}
+        />
         <Note>{product.note}</Note>
         <Texture>{product.texture}</Texture>
         <Description>{product.description}</Description>
@@ -242,7 +256,7 @@ function Product() {
           <Image src={`https://handsomelai.shop${image}`} key={index} />
         ))}
         <MapContainer style={{ marginTop: "24px" }}>
-          <GoogleMap />
+          <GoogleMap mapTargetProduct={mapTargetProduct} />
         </MapContainer>
       </Images>
     </Wrapper>

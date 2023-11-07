@@ -117,7 +117,7 @@ const AddToCart = styled.button`
   }
 `;
 
-function ProductVariants({ product }) {
+function ProductVariants({ product, setMapTarget }) {
   const [selectedColorCode, setSelectedColorCode] = useState();
   const [selectedSize, setSelectedSize] = useState();
   const [quantity, setQuantity] = useState(0);
@@ -189,6 +189,7 @@ function ProductVariants({ product }) {
     setSelectedColorCode();
     setSelectedSize();
     setQuantity(0);
+    setMapTarget("", "");
     window.alert("已加入商品");
   }
 
@@ -212,6 +213,7 @@ function ProductVariants({ product }) {
               setSelectedColorCode(color.code);
               setSelectedSize();
               setQuantity(0);
+              setMapTarget(`#${color.code}`, selectedSize ? selectedSize : "");
             }}
           />
         ))}
@@ -229,7 +231,9 @@ function ProductVariants({ product }) {
                 if (stock === 0) return;
                 setSelectedSize(size);
                 setQuantity(0);
-              }}>
+                setMapTarget(`#${selectedColorCode}`, size);
+              }}
+            >
               {size}
             </Size>
           );
