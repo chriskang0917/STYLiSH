@@ -80,6 +80,7 @@ const ItemImage = styled.img`
 
 const ItemName = styled(Link)`
   text-decoration: none;
+  color: #8b572a;
 `;
 
 const ItemID = styled.div``;
@@ -92,7 +93,8 @@ const ItemDetails = styled.div`
   @media screen and (max-width: 1279px) {
     display: grid;
     margin-left: 20px;
-
+    height: 152px;
+    align-content: space-between;
     order: 1;
   }
 `;
@@ -173,7 +175,7 @@ function History() {
                   {item.data.title}
                 </ItemName>
                 <ItemCatagory>{item.data.category}</ItemCatagory>
-                <ItemID>{item.data.id.toString()}</ItemID>
+                <ItemID>id:{item.data.id.toString()}</ItemID>
                 <ItemUnitPriceValue>
                   NT.{item.data.price.toString()}
                 </ItemUnitPriceValue>
@@ -191,7 +193,7 @@ function History() {
                   {item.data.title}
                 </ItemName>
                 <ItemCatagory>{item.data.category}</ItemCatagory>
-                <ItemID>{item.data.id.toString()}</ItemID>
+                <ItemID>id:{item.data.id.toString()}</ItemID>
                 <ItemUnitPriceValue>
                   NT.{item.data.price.toString()}
                 </ItemUnitPriceValue>

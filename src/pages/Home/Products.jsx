@@ -146,7 +146,7 @@ function Products() {
     <Wrapper>
       {products.map(({ id, main_image, colors, title, price }) => (
         <Product key={id} to={`/products/${id}`}>
-          <ProductImage src={main_image} />
+          <ProductImage src={`https://handsomelai.shop${main_image}`} />
           <ProductColors>
             {colors.map(({ code }) => (
               <ProductColor $colorCode={`#${code}`} key={code} />

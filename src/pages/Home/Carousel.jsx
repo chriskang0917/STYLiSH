@@ -117,9 +117,10 @@ function Carousel() {
       {campaigns.map(({ picture, product_id, story }, index) => (
         <Campaign
           $isActive={index === activeCampaignIndex}
-          $backgroundImageUrl={picture}
+          $backgroundImageUrl={`https://handsomelai.shop${picture}`}
           key={index}
-          to={`/products/${product_id}`}>
+          to={`/products/${product_id}`}
+        >
           <Story>
             <StoryContent>
               {story.split("\r\n").slice(0, 3).join("\r\n")}
