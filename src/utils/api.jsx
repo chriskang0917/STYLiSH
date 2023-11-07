@@ -1,4 +1,5 @@
 const api = {
+  // hostname: "https://api.appworks-school.tw/api/1.0",
   hostname: "https://handsomelai.shop/api",
   async getProducts(category, paging) {
     const response = await fetch(
@@ -79,7 +80,7 @@ const api = {
       body: JSON.stringify({ jwtToken: userJwtToken }),
     });
   },
-  async getStock(data) {
+  async getStock(id) {
     const response = await fetch(
       `https://handsomelai.shop/api/products/shops?id=${id}`
     );

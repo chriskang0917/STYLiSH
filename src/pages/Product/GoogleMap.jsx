@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import api from "../../utils/api";
 
 function GoogleMap() {
   const [stock, setStock] = useState({});
+  const { id } = useParams();
+
   useEffect(() => {
     const google = window.google;
     let currentPosition;
+    let marker;
     const map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 40.7128, lng: -74.006 },
       zoom: 10,
@@ -37,18 +41,24 @@ function GoogleMap() {
           address: place.formatted_phone_number,
           rating: place.rating,
         };
+        if (!marker) {
+          marker = new google.maps.Marker({
+            map: map,
+          });
+        }
+        marker.setPosition;
       });
     });
   }, []);
 
   useEffect(() => {
     async function getStock() {
-      const { data } = await api.getStock();
+      const { data } = await api.getStock(id);
       setStock(data);
-      console.log(stock);
     }
     getStock();
-  }, []);
+    console.log(stock);
+  }, [id]);
 
   return <div id="map" style={{ width: "100%", height: "400px" }}></div>;
 }
