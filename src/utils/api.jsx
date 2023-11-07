@@ -61,6 +61,7 @@ const api = {
     });
     return await response.json();
   },
+
   async getHistory() {
     const jwtToken = localStorage.getItem("jwtToken");
     const response = await fetch(`${this.hostname}/user/browsingHistory`, {
@@ -81,6 +82,12 @@ const api = {
       }),
       body: JSON.stringify({ jwtToken: userJwtToken }),
     });
+  },
+  async getStock(id) {
+    const response = await fetch(
+      `https://handsomelai.shop/api/products/shops?id=${id}`
+    );
+
     return await response.json();
   },
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import api from "../../utils/api";
+import GoogleMap from "./GoogleMap";
 import ProductVariants from "./ProductVariants";
 
 const Wrapper = styled.div`
@@ -248,6 +249,20 @@ const Images = styled.div`
   }
 `;
 
+const MapContainer = styled.div`
+  @media screen and (max-width: 1279px) {
+    width: 100%;
+  }
+
+  & + & {
+    margin-top: 30px;
+
+    @media screen and (max-width: 1279px) {
+      margin-top: 20px;
+    }
+  }
+`;
+
 const Image = styled.img`
   @media screen and (max-width: 1279px) {
     width: 100%;
@@ -327,6 +342,16 @@ const FAKE_SHOP_STOCKS = {
 function Product() {
   const [product, setProduct] = useState();
   const { id } = useParams();
+  const [mapTargetProduct, setMapTargetProduct] = useState({
+    color: "",
+    size: "",
+  });
+  const setMapTarget = (color, size) => {
+    setMapTargetProduct({
+      color: color,
+      size: size,
+    });
+  };
 
   useEffect(() => {
     async function getProduct() {
@@ -353,7 +378,11 @@ function Product() {
         <Title>{product.title}</Title>
         <ID>{product.id}</ID>
         <Price>TWD.{product.price}</Price>
-        <ProductVariants product={product} />
+        <ProductVariants
+          product={product}
+          mapTargetProduct={mapTargetProduct}
+          setMapTarget={setMapTarget}
+        />
         <Note>{product.note}</Note>
         <Texture>{product.texture}</Texture>
         <Description>{product.description}</Description>
@@ -387,10 +416,14 @@ function Product() {
         <StoryTitle>細部說明</StoryTitle>
         <StoryContent>{product.story}</StoryContent>
       </Story>
+
       <Images>
         {product.images.map((image, index) => (
           <Image src={`https://handsomelai.shop${image}`} key={index} />
         ))}
+        <MapContainer style={{ marginTop: "24px" }}>
+          <GoogleMap mapTargetProduct={mapTargetProduct} />
+        </MapContainer>
       </Images>
     </Wrapper>
   );
