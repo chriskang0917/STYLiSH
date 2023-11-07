@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../context/authContext";
 import api from "../../utils/api";
-
 const HistoryContent = styled.div`
   margin: 20px auto;
 `;
