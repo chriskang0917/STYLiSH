@@ -166,6 +166,9 @@ const StoryContent = styled.div`
   }
 `;
 
+const GoogleMap = styled(Story)``;
+const GoogleMapTitle = styled(StoryTitle)``;
+
 const Images = styled.div`
   margin: 30px 0 0;
 
@@ -217,6 +220,9 @@ function Product() {
         <Place>素材產地 / {product.place}</Place>
         <Place>加工產地 / {product.place}</Place>
       </Details>
+      <GoogleMap>
+        <GoogleMapTitle>實體商店庫存</GoogleMapTitle>
+      </GoogleMap>
       <Story>
         <StoryTitle>細部說明</StoryTitle>
         <StoryContent>{product.story}</StoryContent>
