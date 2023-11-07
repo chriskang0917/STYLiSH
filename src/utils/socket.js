@@ -9,7 +9,13 @@ class Socket {
   connect(identity = "user") {
     this.user = identity;
 
-    const userIdentity = [identity, this.jwtToken];
+    const adminJwtToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM3LCJpYXQiOjE2OTkzMzE1NzEsImV4cCI6MTcwNDUxNTU3MX0.lQ5LgKSHzx9lls3pluzdqoyvN890Zaf2kQuKtIf6uMA";
+
+    let userIdentity;
+    if (identity === "admin") userIdentity = [identity, adminJwtToken];
+    if (identity === "user") userIdentity = [identity, this.jwtToken];
+
     this.socket.emit("user-check", userIdentity);
   }
 
