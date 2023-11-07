@@ -5,25 +5,37 @@ import api from "../../utils/api";
 function GoogleMap() {
   const [stock, setStock] = useState({});
   const { id } = useParams();
-
+  const [map, setMap] = useState(null);
+  useEffect(() => {
+    async function getStock() {
+      const { data } = await api.getStock(id);
+      setStock(data);
+    }
+    getStock();
+    console.log(stock);
+  }, [id]);
   useEffect(() => {
     const google = window.google;
     let currentPosition;
     let marker;
-    let direactionService;
-    let direactionRender;
+    let directionService;
+    let directionRenderer;
     let infoWindow;
-    const map = new google.maps.Map(document.getElementById("map"), {
+
+    const mapElement = document.getElementById("map");
+
+    const map = new google.maps.Map(mapElement, {
       center: { lat: 40.7128, lng: -74.006 },
       zoom: 10,
     });
+    setMap(map);
+
     navigator.geolocation.getCurrentPosition(function (position) {
       currentPosition = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
       map.setCenter(currentPosition);
-      console.log(currentPosition);
       map.setZoom(16);
       const autoComplete = new google.maps.places.Autocomplete({
         bounds: {
@@ -34,66 +46,63 @@ function GoogleMap() {
         },
         strictBounds: false,
       });
+
       autoComplete.addListener("place_changed", function () {
         const place = autoComplete.getPlace();
 
-        selectRestaurant = {
-          location: place.geometry.location,
-          placeId: place.place_id,
-          name: place.name,
-          address: place.formatted_phone_number,
-          rating: place.rating,
-        };
         if (!marker) {
           marker = new google.maps.Marker({
             map: map,
           });
         }
-        marker.setPosition(selectRestaurant.location);
-        if (!direactionService) {
-          direactionService = new google.maps.DireactionsService();
+        marker.setPosition(stock.location);
+
+        if (!directionService) {
+          directionService = new google.maps.DirectionsService();
         }
-        if (!direactionRender) {
-          direactionRender = new google.maps.DireactionsRrender({ map: map });
+        if (!directionRenderer) {
+          directionRenderer = new google.maps.DirectionsRenderer({ map: map });
         }
-        direactionRender.set("direactions", null);
-        direactionService.route(
+        directionRenderer.set("directions", null);
+
+        directionService.route(
           {
-            origin: new google.maps.Lating(
+            origin: new google.maps.LatLng(
               currentPosition.lat,
               currentPosition.lng
             ),
             destination: {
-              placeId: selectRestaurant.placeId,
+              // stock.shopStocks[0].lat,
+              // stock.shopStocks[0].lng
             },
             travelMode: "WALKING",
           },
           function (response, status) {
             if (status === "OK") {
-              direactionRender.setDirections(response);
+              directionRenderer.setDirections(response);
               if (!infoWindow) {
                 infoWindow = new google.maps.InfoWindow();
               }
-              infoWindow.setContent(
-                `<h3>${selectRestaurant.name}</h3>
-                `
-              );
-              infoWindow.open(map, maker);
+              stock.shopStocks.forEach((shop) => {
+                const shopMarker = new google.maps.Marker({
+                  map: map,
+                  position: new google.maps.LatLng(
+                    shopStocks.lat,
+                    shopStocks.lng
+                  ),
+                  title: shop.name,
+                });
+                shopMarker.addListener("click", function () {
+                  infoWindow.setContent(`<h3>${shop.name}</h3>`);
+                  infoWindow.open(map, shopMarker);
+                });
+              });
             }
           }
         );
       });
     });
-  }, []);
-
-  useEffect(() => {
-    async function getStock() {
-      const { data } = await api.getStock(id);
-      setStock(data);
-    }
-    getStock();
-    console.log(stock);
-  }, [id]);
+  }, [stock]);
 
   return <div id="map" style={{ width: "100%", height: "400px" }}></div>;
 }
