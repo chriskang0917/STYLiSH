@@ -17,26 +17,46 @@ function GoogleMap() {
   useEffect(() => {
     const google = window.google;
     let currentPosition;
-    let marker;
-    let directionService;
-    let directionRenderer;
-    let infoWindow;
 
-    const mapElement = document.getElementById("map");
-
-    const map = new google.maps.Map(mapElement, {
+    let mapOptions = {
       center: { lat: 40.7128, lng: -74.006 },
       zoom: 10,
+    };
+    let map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    let marker0 = new google.maps.Marker({
+      position: { lat: 25.045749558028554, lng: 121.514770213844373 },
+      title: "Hello World!",
     });
-    setMap(map);
+    let marker1 = new google.maps.Marker({
+      position: { lat: 25.044023639710836, lng: 121.50711269664501 },
+      title: "Hello World!",
+    });
+    let marker2 = new google.maps.Marker({
+      position: { lat: 25.006886285840675, lng: 121.47485399849825 },
+      title: "Hello World!",
+    });
+    let marker3 = new google.maps.Marker({
+      position: { lat: 24.96886585202906, lng: 121.2493434678071 },
+      title: "Hello World!",
+    });
+    let marker4 = new google.maps.Marker({
+      position: { lat: 25.02143530092362, lng: 121.55607186631653 },
+      title: "Hello World!",
+    });
+
+    marker0.setMap(map);
+    marker1.setMap(map);
+    marker2.setMap(map);
+    marker3.setMap(map);
+    marker4.setMap(map);
 
     navigator.geolocation.getCurrentPosition(function (position) {
       currentPosition = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
+        lat: 25.02143530092362,
+        lng: 121.55607186631653,
       };
       map.setCenter(currentPosition);
-      map.setZoom(16);
+      map.setZoom(10);
       const autoComplete = new google.maps.places.Autocomplete({
         bounds: {
           east: currentPosition.lng + 0.001,
@@ -45,61 +65,6 @@ function GoogleMap() {
           north: currentPosition.lat + 0.001,
         },
         strictBounds: false,
-      });
-
-      autoComplete.addListener("place_changed", function () {
-        const place = autoComplete.getPlace();
-
-        if (!marker) {
-          marker = new google.maps.Marker({
-            map: map,
-          });
-        }
-        marker.setPosition(stock.location);
-
-        if (!directionService) {
-          directionService = new google.maps.DirectionsService();
-        }
-        if (!directionRenderer) {
-          directionRenderer = new google.maps.DirectionsRenderer({ map: map });
-        }
-        directionRenderer.set("directions", null);
-
-        directionService.route(
-          {
-            origin: new google.maps.LatLng(
-              currentPosition.lat,
-              currentPosition.lng
-            ),
-            destination: {
-              // stock.shopStocks[0].lat,
-              // stock.shopStocks[0].lng
-            },
-            travelMode: "WALKING",
-          },
-          function (response, status) {
-            if (status === "OK") {
-              directionRenderer.setDirections(response);
-              if (!infoWindow) {
-                infoWindow = new google.maps.InfoWindow();
-              }
-              stock.shopStocks.forEach((shop) => {
-                const shopMarker = new google.maps.Marker({
-                  map: map,
-                  position: new google.maps.LatLng(
-                    shopStocks.lat,
-                    shopStocks.lng
-                  ),
-                  title: shop.name,
-                });
-                shopMarker.addListener("click", function () {
-                  infoWindow.setContent(`<h3>${shop.name}</h3>`);
-                  infoWindow.open(map, shopMarker);
-                });
-              });
-            }
-          }
-        );
       });
     });
   }, [stock]);
