@@ -361,13 +361,23 @@ function Product() {
     getProduct();
   }, [id]);
 
+  const [stock, setStock] = useState({});
+
   useEffect(() => {
-    async function getShopStocks() {
-      const { data } = await api.getShopStocks(id);
-      console.log(data);
+    async function getStock() {
+      const { data } = await api.getStock(id);
+      const selectShopStocks = [...data].filter(
+        (obj) =>
+          obj.color_code === mapTargetProduct.color &&
+          obj.size === mapTargetProduct.size
+      );
+
+      setStock(selectShopStocks[0].shopStocks);
     }
-    getShopStocks();
-  }, [id]);
+    getStock();
+    console.log(stock);
+    console.log(mapTargetProduct);
+  }, [id, mapTargetProduct]);
 
   if (!product) return null;
 
