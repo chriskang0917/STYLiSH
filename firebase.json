@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "jolina-feature-history-api-1",
+    "site": "jolina-feature-history-api-2",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
