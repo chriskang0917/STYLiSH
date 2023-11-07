@@ -201,7 +201,7 @@ function Chat() {
       block: "end",
       inline: "nearest",
     });
-  }, [newMessage]);
+  }, [messages.length]);
 
   const handleSendMessage = (event) => {
     event.preventDefault();

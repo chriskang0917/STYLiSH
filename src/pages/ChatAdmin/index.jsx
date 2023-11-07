@@ -106,7 +106,6 @@ const SendButton = styled.button`
   color: #fff;
   border: none;
   padding: 8px;
-  cursor: pointer;
   border-radius: 10px;
   cursor: ${({ $hasUser }) => ($hasUser ? "pointer" : "not-allowed")};
 `;
@@ -116,6 +115,13 @@ const SendArea = styled.form`
   gap: 20px;
   margin-bottom: 20px;
   justify-content: center;
+`;
+
+const DisableButton = styled(SendButton)`
+  margin: 0 auto;
+  letter-spacing: 2px;
+  display: block;
+  cursor: ${({ $hasUser }) => ($hasUser ? "pointer" : "not-allowed")};
 `;
 
 const EmptyMessage = styled.div`
@@ -130,6 +136,7 @@ function ChatAdmin() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [userJwtToken, setUserJwtToken] = useState("");
+  const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
     socket.connect("admin");
@@ -157,7 +164,7 @@ function ChatAdmin() {
       block: "end",
       inline: "nearest",
     });
-  }, [newMessage]);
+  }, [messages.length]);
 
   const handleSendMessage = (event) => {
     event.preventDefault();
@@ -171,12 +178,23 @@ function ChatAdmin() {
     setNewMessage("");
   };
 
+  const handleDisableChat = (event) => {
+    event.preventDefault();
+    socket.disconnect();
+    setIsConnected(false);
+    setUserJwtToken("");
+  };
+
   return (
     <>
       <ChatHeader>Admin 後臺聊天室</ChatHeader>
+      <DisableButton onClick={handleDisableChat} $hasUser={userJwtToken}>
+        結束對話
+      </DisableButton>
+      {!isConnected && <EmptyMessage>使用者已離開聊天室。</EmptyMessage>}
       <ChatContainer>
         <ChatMessages>
-          {!userJwtToken && (
+          {!userJwtToken && isConnected && (
             <EmptyMessage>目前沒有使用者在聊天室內。</EmptyMessage>
           )}
           {messages.map(({ content, isUser }, index) => (

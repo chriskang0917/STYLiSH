@@ -36,6 +36,10 @@ class Socket {
     const userIdentity = [this.user, this.jwtToken];
     this.socket.emit("talk", message, userIdentity);
   }
+
+  disconnect() {
+    this.socket.emit("user-close");
+  }
 }
 
 const hostName = "https://handsomelai.shop/";
