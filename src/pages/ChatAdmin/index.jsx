@@ -163,7 +163,7 @@ function ChatAdmin() {
 
   return (
     <>
-      <ChatHeader>客服聊天室</ChatHeader>
+      <ChatHeader>Admin 後臺聊天室</ChatHeader>
       <ChatContainer>
         <ChatMessages>
           {messages.map(({ content, isUser }, index) => (
