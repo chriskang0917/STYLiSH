@@ -25,7 +25,6 @@ const api = {
         "Content-Type": "application/json",
       },
     });
-
     return await response.json();
   },
   async checkout(data, jwtToken) {
@@ -41,12 +40,11 @@ const api = {
   },
   async signin(data) {
     const response = await fetch(`${this.hostname}/user/signin`, {
-      // const response = await fetch(`https://handsomelai.shop/api/user/signin`, {
+      method: "POST",
       body: JSON.stringify(data),
       headers: new Headers({
         "Content-Type": "application/json",
       }),
-      method: "POST",
     });
     return await response.json();
   },
@@ -59,18 +57,26 @@ const api = {
     });
     return await response.json();
   },
-  async getHistory(data) {
+  async getHistory() {
     const jwtToken = localStorage.getItem("jwtToken");
-    const response = await fetch(
-      `https://handsomelai.shop/api/user/browsingHistory`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${this.hostname}/user/browsingHistory`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return await response.json();
+  },
+  async getChatHistory(jwtToken) {
+    const userJwtToken = localStorage.getItem("jwtToken") || jwtToken;
+    const response = await fetch(`${this.hostname}/user/chat/history`, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({ jwtToken: userJwtToken }),
+    });
     return await response.json();
   },
 };

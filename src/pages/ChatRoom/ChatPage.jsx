@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../context/authContext";
+import api from "../../utils/api";
 import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 
@@ -137,8 +138,20 @@ function Chat() {
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    socket.connect("user");
-    socket.receive(setMessages);
+    const getSortedHistory = (messages) => {
+      return [...messages].sort((a, b) => a.sendTime - b.sendTime);
+    };
+
+    const initChatHistory = async () => {
+      const { data: chatHistory } = await api.getChatHistory();
+      const sortedHistory = getSortedHistory(chatHistory);
+      setMessages((prevMessages) => [...prevMessages, ...sortedHistory]);
+
+      socket.connect("user");
+      socket.receive(setMessages);
+    };
+
+    initChatHistory();
   }, []);
 
   useEffect(() => {
@@ -148,11 +161,10 @@ function Chat() {
       block: "end",
       inline: "nearest",
     });
-  }, [newMessage]);
+  }, [messages.length]);
 
   const handleSendMessage = (event) => {
     event.preventDefault();
-
     if (newMessage.trim() === "") return;
 
     socket.send(newMessage);

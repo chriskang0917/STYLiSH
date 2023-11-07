@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import api from "../../utils/api";
 import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 
@@ -92,6 +93,8 @@ const ChatInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #ccc;
+  cursor: ${({ $hasUser }) => ($hasUser ? "pointer" : "not-allowed")};
+
   &:placeholder {
     color: #fff;
   }
@@ -103,8 +106,8 @@ const SendButton = styled.button`
   color: #fff;
   border: none;
   padding: 8px;
-  cursor: pointer;
   border-radius: 10px;
+  cursor: ${({ $hasUser }) => ($hasUser ? "pointer" : "not-allowed")};
 `;
 
 const SendArea = styled.form`
@@ -114,15 +117,45 @@ const SendArea = styled.form`
   justify-content: center;
 `;
 
+const DisableButton = styled(SendButton)`
+  margin: 0 auto;
+  letter-spacing: 2px;
+  display: block;
+  cursor: ${({ $hasUser }) => ($hasUser ? "pointer" : "not-allowed")};
+`;
+
+const EmptyMessage = styled.div`
+  text-align: center;
+  margin-top: 20px;
+  color: #bdb0b0;
+  letter-spacing: 2px;
+`;
+
 function ChatAdmin() {
   const listRef = useRef([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [userJwtToken, setUserJwtToken] = useState("");
+  const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
     socket.connect("admin");
-    socket.receive(setMessages);
+    socket.receive(setMessages, setUserJwtToken);
   }, []);
+
+  useEffect(() => {
+    if (userJwtToken === "") return;
+
+    const getSortedMessages = (chatHistory) => {
+      return [...chatHistory].sort((a, b) => a.sendTime - b.sendTime);
+    };
+    const initChatHistory = async () => {
+      const { data: chatHistory } = await api.getChatHistory(userJwtToken);
+      setMessages(getSortedMessages(chatHistory));
+    };
+
+    initChatHistory();
+  }, [userJwtToken]);
 
   useEffect(() => {
     const lastMessage = listRef.current[messages.length - 1];
@@ -131,15 +164,13 @@ function ChatAdmin() {
       block: "end",
       inline: "nearest",
     });
-  }, [newMessage]);
+  }, [messages.length]);
 
   const handleSendMessage = (event) => {
     event.preventDefault();
 
     if (newMessage.trim() === "") return;
-
     socket.send(newMessage);
-
     setMessages([
       ...messages,
       { content: newMessage, isUser: false, sendTime: Date.now() },
@@ -147,11 +178,25 @@ function ChatAdmin() {
     setNewMessage("");
   };
 
+  const handleDisableChat = (event) => {
+    event.preventDefault();
+    socket.disconnect();
+    setIsConnected(false);
+    setUserJwtToken("");
+  };
+
   return (
     <>
-      <ChatHeader>客服聊天室</ChatHeader>
+      <ChatHeader>Admin 後臺聊天室</ChatHeader>
+      <DisableButton onClick={handleDisableChat} $hasUser={userJwtToken}>
+        結束對話
+      </DisableButton>
+      {!isConnected && <EmptyMessage>使用者已離開聊天室。</EmptyMessage>}
       <ChatContainer>
         <ChatMessages>
+          {!userJwtToken && isConnected && (
+            <EmptyMessage>目前沒有使用者在聊天室內。</EmptyMessage>
+          )}
           {messages.map(({ content, isUser }, index) => (
             <div
               key={index}
@@ -170,8 +215,12 @@ function ChatAdmin() {
             placeholder="請輸入訊息"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            $hasUser={userJwtToken}
+            disabled={!userJwtToken}
           />
-          <SendButton onClick={handleSendMessage}>送出</SendButton>
+          <SendButton onClick={handleSendMessage} $hasUser={userJwtToken}>
+            送出
+          </SendButton>
         </SendArea>
       </ChatContainer>
     </>
