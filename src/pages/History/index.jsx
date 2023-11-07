@@ -145,15 +145,16 @@ function History() {
 
   useEffect(() => {
     async function getHistory() {
-      const { data } = await api.getHistory();
-      setProduct(data);
+      const { records } = await api.getHistory();
+
+      setProduct(records);
     }
     getHistory();
   }, []);
+
   const tokenLocalStorage = localStorage.getItem("jwtToken");
 
-  const [loading, setLoading] = useState(false);
-  const { jwtToken, isLogin, login } = useContext(AuthContext);
+  const { jwtToken } = useContext(AuthContext);
   return (
     <HistoryContent>
       {jwtToken ? (
@@ -165,14 +166,16 @@ function History() {
           {product.map((item, index) => (
             <Items hideOnMobile key={index}>
               <Item>
-                <ItemImage src={`https://handsomelai.shop${item.main_image}`} />
-                <ItemName key={item.id} to={`/products/${item.id}`}>
-                  {item.title}
+                <ItemImage
+                  src={`https://handsomelai.shop${item.data.main_image}`}
+                />
+                <ItemName key={item.data.id} to={`/products/${item.data.id}`}>
+                  {item.data.title}
                 </ItemName>
-                <ItemCatagory>{item.category}</ItemCatagory>
-                <ItemID>{item.id.toString()}</ItemID>
+                <ItemCatagory>{item.data.category}</ItemCatagory>
+                <ItemID>{item.data.id.toString()}</ItemID>
                 <ItemUnitPriceValue>
-                  NT.{item.price.toString()}
+                  NT.{item.data.price.toString()}
                 </ItemUnitPriceValue>
               </Item>
             </Items>
@@ -180,15 +183,17 @@ function History() {
 
           {product.map((item, index) => (
             <ItemMobile hideOnDesktop>
-              <ItemImage src={`https://handsomelai.shop${item.main_image}`} />
+              <ItemImage
+                src={`https://handsomelai.shop${item.data.main_image}`}
+              />
               <ItemDetails hideOnDesktop key={index}>
-                <ItemName key={item.id} to={`/products/${item.id}`}>
-                  {item.title}
+                <ItemName key={item.data.id} to={`/products/${item.data.id}`}>
+                  {item.data.title}
                 </ItemName>
-                <ItemCatagory>{item.category}</ItemCatagory>
-                <ItemID>{item.id.toString()}</ItemID>
+                <ItemCatagory>{item.data.category}</ItemCatagory>
+                <ItemID>{item.data.id.toString()}</ItemID>
                 <ItemUnitPriceValue>
-                  NT.{item.price.toString()}
+                  NT.{item.data.price.toString()}
                 </ItemUnitPriceValue>
               </ItemDetails>
             </ItemMobile>

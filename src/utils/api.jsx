@@ -1,6 +1,6 @@
 const api = {
-  hostname: "https://api.appworks-school.tw/api/1.0",
-  // hostname: "https://handsomelai.shop/api",
+  // hostname: "https://api.appworks-school.tw/api/1.0",
+  hostname: "https://handsomelai.shop/api",
   async getProducts(category, paging) {
     const response = await fetch(
       `${this.hostname}/products/${category}?paging=${paging}`
@@ -18,7 +18,15 @@ const api = {
     return await response.json();
   },
   async getProduct(id) {
-    const response = await fetch(`${this.hostname}/products/details?id=${id}`);
+    const jwtToken = localStorage.getItem("jwtToken");
+    const response = await fetch(`${this.hostname}/products/details?id=${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
     return await response.json();
   },
   async checkout(data, jwtToken) {
@@ -53,10 +61,17 @@ const api = {
     return await response.json();
   },
   async getHistory(data) {
+    const jwtToken = localStorage.getItem("jwtToken");
     const response = await fetch(
-      `https://handsomelai.shop/api/user/browsingHistory`
+      `https://handsomelai.shop/api/user/browsingHistory`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
-
     return await response.json();
   },
 };

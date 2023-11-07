@@ -377,7 +377,7 @@ function Header() {
   const handleLinkClick = async () => {
     try {
       const response = await fetch(
-        "https://handsomelai.shop/api/products/details?id=161",
+        "https://handsomelai.shop/api/user/browsingHistory",
         {
           method: "GET",
           headers: {
@@ -411,7 +411,8 @@ function Header() {
                 behavior: "smooth",
               });
               navigate(`/?category=${name}`);
-            }}>
+            }}
+          >
             {displayText}
           </CategoryLink>
         ))}
@@ -450,7 +451,8 @@ function Header() {
                     });
                     navigate(`/?keyword=${value}`);
                     setSearchToggle(!searchToggle);
-                  }}>
+                  }}
+                >
                   {value}
                 </SearchLink>
                 <SearchDelete
