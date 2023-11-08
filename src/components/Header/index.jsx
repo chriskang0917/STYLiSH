@@ -92,7 +92,7 @@ const CategoryLink = styled.a`
     }
   }
 
-  & + &::before {
+  &:not(:first-of-type):after {
     content: "|";
     position: absolute;
     left: 0;
@@ -411,8 +411,7 @@ function Header() {
                 behavior: "smooth",
               });
               navigate(`/?category=${name}`);
-            }}
-          >
+            }}>
             {displayText}
           </CategoryLink>
         ))}
@@ -451,8 +450,7 @@ function Header() {
                     });
                     navigate(`/?keyword=${value}`);
                     setSearchToggle(!searchToggle);
-                  }}
-                >
+                  }}>
                   {value}
                 </SearchLink>
                 <SearchDelete
