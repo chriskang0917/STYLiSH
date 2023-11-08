@@ -130,12 +130,21 @@ const LoginButton = styled.button`
   border-radius: 10px;
 `;
 
+const Warning = styled.div`
+  margin-top: 30px;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  color: #988f8f;
+`;
+
 function Chat() {
   const listRef = useRef([]);
   const { isLogin } = useContext(AuthContext);
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isAdminExist, setIsAdminExist] = useState(false);
 
   useEffect(() => {
     const getSortedHistory = (messages) => {
@@ -150,7 +159,7 @@ function Chat() {
       setMessages((prevMessages) => [...prevMessages, ...sortedHistory]);
 
       socket.connect("user");
-      socket.receive(setMessages);
+      socket.receive(setMessages, setIsAdminExist);
     };
 
     initChatHistory();
@@ -181,6 +190,11 @@ function Chat() {
   return (
     <>
       <Header>客 服 聊 聊</Header>
+      {isAdminExist ? (
+        <Warning>客服已上線，請開始對話。</Warning>
+      ) : (
+        <Warning>目前客服尚未上線，請於服務時間再來。</Warning>
+      )}
       <ChatContainer>
         <ChatMessages>
           {isLogin ? (
@@ -207,9 +221,12 @@ function Chat() {
               type="text"
               placeholder="請輸入訊息"
               value={newMessage}
+              disabled={!isAdminExist}
               onChange={(e) => setNewMessage(e.target.value)}
             />
-            <SendButton onClick={handleSendMessage}>送出</SendButton>
+            <SendButton onClick={handleSendMessage} disabled={!isAdminExist}>
+              送出
+            </SendButton>
           </SendArea>
         )}
       </ChatContainer>
