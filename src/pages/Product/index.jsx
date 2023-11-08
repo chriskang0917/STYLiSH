@@ -299,9 +299,9 @@ function Product() {
     async function getNewProducts() {
       const { data } = await api.getNewProducts();
       const targetData = data.filter((obj) => obj.id.toString() === id);
-      console.log("id", id);
+      // console.log("id", id);
       setProduct(targetData[0]);
-      console.log(product);
+      // console.log(product);
     }
     if (id < 1234) {
       getProduct();
@@ -328,7 +328,7 @@ function Product() {
 
   if (!product) return null;
   if (!stock) return null;
-  console.log("product", product);
+  // console.log("product", product);
 
   const hasShopDetail = stock.length > 0;
 

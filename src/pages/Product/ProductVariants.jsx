@@ -181,6 +181,7 @@ function ProductVariants({ product }) {
               id: product.id,
               image: product.main_image,
               name: product.title,
+              title: product.title,
               price: product.price,
               qty: quantity,
               size: selectedSize,
