@@ -373,9 +373,10 @@ function Checkout() {
       );
       window.alert("付款成功");
       setCartItems([]);
-      navigate("/thankyou", {
-        state: { orderNumber: checkoutResult.data.number },
-      });
+      // navigate("/thankyou", {
+      //   state: { orderNumber: checkoutResult.data.number },
+      // });
+      // console.log(checkoutResult);
     } catch (err) {
       console.log(err);
     } finally {

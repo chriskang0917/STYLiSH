@@ -243,7 +243,13 @@ function Cart() {
       <Items>
         {cartItems.map((item, index) => (
           <Item key={`${item.id}-${item.color.code}-${item.size}`}>
-            <ItemImage src={item.image} />
+            <ItemImage
+              src={
+                item.id > 1233
+                  ? item.image
+                  : `https://handsomelai.shop${item.image}`
+              }
+            />
             <ItemDetails>
               <ItemName>{item.name}</ItemName>
               <ItemID>{item.id}</ItemID>
