@@ -376,7 +376,6 @@ function Checkout() {
       navigate("/thankyou", {
         state: { orderNumber: checkoutResult.data.number },
       });
-      console.log(checkoutResult);
     } catch (err) {
       console.log(err);
     } finally {
