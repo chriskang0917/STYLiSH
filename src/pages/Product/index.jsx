@@ -314,6 +314,8 @@ function Product() {
 
   const [stock, setStock] = useState([]);
 
+  console.log(stock);
+
   useEffect(() => {
     async function getStock() {
       const { data } = await api.getStock(id);
@@ -330,7 +332,6 @@ function Product() {
 
   if (!product) return null;
   if (!stock) return null;
-  // console.log("product", product);
 
   const hasShopDetail = stock.length > 0;
   const isPreOrderProduct = id > 1233;
