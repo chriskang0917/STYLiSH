@@ -32,12 +32,17 @@ const ChatMessages = styled.div`
 
 const MessageContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   margin-right: 50px;
 `;
-
-const Message = styled.div`
+const MessageUserContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: 50px;
+`;
+const MessageUser = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -59,6 +64,33 @@ const Message = styled.div`
     border: 15px solid transparent;
     border-left-color: #313538;
     border-right: 0;
+    border-top: 0;
+    margin-top: -10px;
+    margin-right: -20px;
+  }
+`;
+const Message = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 10px 0px;
+  background-color: #ccc;
+  color: #3f3a3a;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 15px solid transparent;
+    border-right-color: #ccc;
+    border-left: 0;
     border-top: 0;
     margin-top: -10px;
     margin-right: -20px;
@@ -121,6 +153,7 @@ const DisableButton = styled(SendButton)`
   margin: 0 auto;
   letter-spacing: 2px;
   display: block;
+  width: 92px;
   cursor: ${({ $hasUser }) => ($hasUser ? "pointer" : "not-allowed")};
 `;
 
@@ -200,12 +233,23 @@ function ChatAdmin() {
           {messages.map(({ content, isUser }, index) => (
             <div
               key={index}
-              ref={(element) => (listRef.current[index] = element)}>
-              <MessageContainer>
-                <Message>{content}</Message>
-                {!isUser && <AdminAvatar>客服</AdminAvatar>}
-                {isUser && <Avatar />}
-              </MessageContainer>
+              ref={(element) => (listRef.current[index] = element)}
+            >
+              {isUser ? (
+                <MessageUserContainer>
+                  {!isUser && <Message>{content}</Message>}
+                  {isUser && <MessageUser>{content}</MessageUser>}
+                  {!isUser && <AdminAvatar>客服</AdminAvatar>}
+                  {isUser && <Avatar />}
+                </MessageUserContainer>
+              ) : (
+                <MessageContainer>
+                  {!isUser && <AdminAvatar>客服</AdminAvatar>}
+                  {isUser && <Avatar />}
+                  {!isUser && <Message>{content}</Message>}
+                  {isUser && <MessageUser>{content}</MessageUser>}
+                </MessageContainer>
+              )}
             </div>
           ))}
         </ChatMessages>
