@@ -241,8 +241,11 @@ const ShopStock = styled.span`
 `;
 
 const Images = styled.div`
-  margin: 30px auto 0;
-
+  width: 1160px;
+  margin-top: 30px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   @media screen and (max-width: 1279px) {
     margin: 20px 24px 0;
     width: 100%;
