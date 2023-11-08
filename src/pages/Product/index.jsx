@@ -302,6 +302,7 @@ function Product() {
     async function getNewProducts() {
       const { data } = await api.getNewProducts();
       const targetData = data.filter((obj) => obj.id.toString() === id);
+
       setProduct(targetData[0]);
     }
     if (id < 1234) {
@@ -325,11 +326,11 @@ function Product() {
       setStock(selectShopStocks[0].shopStocks);
     }
     getStock();
-
   }, [id, mapTargetProduct]);
 
   if (!product) return null;
   if (!stock) return null;
+  // console.log("product", product);
 
   const hasShopDetail = stock.length > 0;
   const isPreOrderProduct = id > 1233;
@@ -391,6 +392,7 @@ function Product() {
           )}
         </GoogleMapContainer>
       )}
+
       <Story>
         <StoryTitle>細部說明</StoryTitle>
         <StoryContent>{product.story}</StoryContent>

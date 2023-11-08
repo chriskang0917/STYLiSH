@@ -14,7 +14,8 @@ const Linkto = styled(Link)`
 `;
 const Header = styled.div`
   display: flex;
-  margin: 20px 200px;
+  margin: 20px 200px 10px;
+
   @media screen and (max-width: 1279px) {
     margin: 0px 60px;
     padding-bottom: 10px;
@@ -22,14 +23,35 @@ const Header = styled.div`
   }
 `;
 const HistoryTitle = styled.div`
+  /* flex-grow: 1; */
+  font-size: 22px;
+  width: 300px;
+`;
+const HistoryItems = styled.div`
+  display: flex;
   flex-grow: 1;
+  justify-content: flex-end;
+`;
+const HistoryText = styled.p`
+  flex-grow: 1;
+  align-self: flex-end;
+  justify-self: flex-end;
+  text-align: center;
+  &:first-child {
+    margin-right: 20px;
+  }
+  &:nth-child(2) {
+    margin-left: 20px;
+  }
 `;
 
 const Items = styled.div`
   padding: 20px 20px;
   margin: 20px 200px;
   border: solid 1px #979797;
-
+  &:nth-child(2) {
+    margin: 10px 200px 20px;
+  }
   @media screen and (max-width: 1279px) {
     ${(props) => props.hideOnMobile && "display: none;"}
   }
@@ -79,8 +101,10 @@ const ItemImage = styled.img`
 `;
 
 const ItemName = styled(Link)`
+  font-size: 16px;
   text-decoration: none;
   color: #8b572a;
+  cursor: pointer;
 `;
 
 const ItemID = styled.div``;
@@ -157,6 +181,17 @@ function History() {
   const tokenLocalStorage = localStorage.getItem("jwtToken");
 
   const { jwtToken } = useContext(AuthContext);
+  function categoryText(data) {
+    if (data === "women") {
+      return 女裝;
+    }
+    if (data === "men") {
+      return 男裝;
+    }
+    if (data === "return 女裝") {
+      return 配件;
+    }
+  }
   return (
     <HistoryContent>
       {jwtToken ? (
@@ -174,8 +209,14 @@ function History() {
                 <ItemName key={item.data.id} to={`/products/${item.data.id}`}>
                   {item.data.title}
                 </ItemName>
-                <ItemCatagory>{item.data.category}</ItemCatagory>
-                <ItemID>id:{item.data.id.toString()}</ItemID>
+                <ItemCatagory>
+                  {item.data.category === "women"
+                    ? "女裝"
+                    : item.data.category === "men"
+                    ? "男裝"
+                    : "配件"}
+                </ItemCatagory>
+                <ItemID>商品編號: {item.data.id.toString()}</ItemID>
                 <ItemUnitPriceValue>
                   NT.{item.data.price.toString()}
                 </ItemUnitPriceValue>
