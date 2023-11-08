@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import api from "../../utils/api";
-import { socket } from "../../utils/socket";
+// import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 
 const ChatContainer = styled.div`
@@ -36,7 +36,39 @@ const MessageContainer = styled.div`
   align-items: center;
   margin-right: 50px;
 `;
+const MessageUserContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: 50px;
+`;
+const MessageUser = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 10px 0px;
+  background-color: #313538;
+  color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
 
+  &:after {
+    content: "";
+    position: absolute;
+    right: -1;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 15px solid transparent;
+    border-left-color: #313538;
+    border-right: 0;
+    border-top: 0;
+    margin-top: -10px;
+    margin-right: -20px;
+  }
+`;
 const Message = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -121,6 +153,7 @@ const DisableButton = styled(SendButton)`
   margin: 0 auto;
   letter-spacing: 2px;
   display: block;
+  width: 92px;
   cursor: ${({ $hasUser }) => ($hasUser ? "pointer" : "not-allowed")};
 `;
 
@@ -138,10 +171,10 @@ function ChatAdmin() {
   const [userJwtToken, setUserJwtToken] = useState("");
   const [isConnected, setIsConnected] = useState(true);
 
-  useEffect(() => {
-    socket.connect("admin");
-    socket.receive(setMessages, setUserJwtToken);
-  }, []);
+  // useEffect(() => {
+  //   socket.connect("admin");
+  //   socket.receive(setMessages, setUserJwtToken);
+  // }, []);
 
   useEffect(() => {
     if (userJwtToken === "") return;
@@ -170,7 +203,7 @@ function ChatAdmin() {
     event.preventDefault();
 
     if (newMessage.trim() === "") return;
-    socket.send(newMessage);
+    // socket.send(newMessage);
     setMessages([
       ...messages,
       { content: newMessage, isUser: false, sendTime: Date.now() },
@@ -180,7 +213,7 @@ function ChatAdmin() {
 
   const handleDisableChat = (event) => {
     event.preventDefault();
-    socket.disconnect();
+    // socket.disconnect();
     setIsConnected(false);
     setUserJwtToken("");
   };
@@ -202,11 +235,21 @@ function ChatAdmin() {
               key={index}
               ref={(element) => (listRef.current[index] = element)}
             >
-              <MessageContainer>
-                {!isUser && <AdminAvatar>客服</AdminAvatar>}
-                {isUser && <Avatar />}
-                <Message>{content}</Message>
-              </MessageContainer>
+              {isUser ? (
+                <MessageUserContainer>
+                  {!isUser && <Message>{content}</Message>}
+                  {isUser && <MessageUser>{content}</MessageUser>}
+                  {!isUser && <AdminAvatar>客服</AdminAvatar>}
+                  {isUser && <Avatar />}
+                </MessageUserContainer>
+              ) : (
+                <MessageContainer>
+                  {!isUser && <AdminAvatar>客服</AdminAvatar>}
+                  {isUser && <Avatar />}
+                  {!isUser && <Message>{content}</Message>}
+                  {isUser && <MessageUser>{content}</MessageUser>}
+                </MessageContainer>
+              )}
             </div>
           ))}
         </ChatMessages>
@@ -216,8 +259,8 @@ function ChatAdmin() {
             placeholder="請輸入訊息"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            $hasUser={userJwtToken}
-            disabled={!userJwtToken}
+            // $hasUser={userJwtToken}
+            // disabled={!userJwtToken}
           />
           <SendButton onClick={handleSendMessage} $hasUser={userJwtToken}>
             送出
