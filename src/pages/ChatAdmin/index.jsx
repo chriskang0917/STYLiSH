@@ -32,7 +32,7 @@ const ChatMessages = styled.div`
 
 const MessageContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   margin-right: 50px;
 `;
@@ -42,23 +42,23 @@ const Message = styled.div`
   justify-content: flex-end;
   align-items: center;
   margin: 10px 0px;
-  background-color: #313538;
-  color: #fff;
+  background-color: #ccc;
+  color: #3f3a3a;
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 10px;
   position: relative;
 
-  &:after {
+  &:before {
     content: "";
     position: absolute;
-    right: -1;
+    left: -15px;
     top: 50%;
     width: 0;
     height: 0;
     border: 15px solid transparent;
-    border-left-color: #313538;
-    border-right: 0;
+    border-right-color: #ccc;
+    border-left: 0;
     border-top: 0;
     margin-top: -10px;
     margin-right: -20px;
@@ -200,11 +200,12 @@ function ChatAdmin() {
           {messages.map(({ content, isUser }, index) => (
             <div
               key={index}
-              ref={(element) => (listRef.current[index] = element)}>
+              ref={(element) => (listRef.current[index] = element)}
+            >
               <MessageContainer>
-                <Message>{content}</Message>
                 {!isUser && <AdminAvatar>客服</AdminAvatar>}
                 {isUser && <Avatar />}
+                <Message>{content}</Message>
               </MessageContainer>
             </div>
           ))}
