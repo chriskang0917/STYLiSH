@@ -302,9 +302,8 @@ function Product() {
     async function getNewProducts() {
       const { data } = await api.getNewProducts();
       const targetData = data.filter((obj) => obj.id.toString() === id);
-      // console.log("id", id);
+
       setProduct(targetData[0]);
-      // console.log(product);
     }
     if (id < 1234) {
       getProduct();
@@ -334,12 +333,13 @@ function Product() {
   // console.log("product", product);
 
   const hasShopDetail = stock.length > 0;
+  const isPreOrderProduct = id > 1233;
 
   return (
     <Wrapper>
       <MainImage
         src={
-          id > 1233
+          isPreOrderProduct
             ? product.main_image
             : `https://handsomelai.shop${product.main_image}`
         }
@@ -360,8 +360,7 @@ function Product() {
         <Place>素材產地 / {product.place}</Place>
         <Place>加工產地 / {product.place}</Place>
       </Details>
-
-      {product.id > 1233 ? null : (
+      {isPreOrderProduct ? null : (
         <GoogleMapContainer>
           <GoogleMapTitle>實體商店庫存</GoogleMapTitle>
           <GoogleMapContent>
