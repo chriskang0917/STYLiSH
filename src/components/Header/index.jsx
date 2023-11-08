@@ -327,7 +327,6 @@ function Header() {
 
   function handleClick() {
     setSearchToggle(!searchToggle);
-    console.log(keywordHistories.length);
   }
   function handleDelete(itemIndex) {
     const newkeyWordHistories = keywordHistories.filter(
@@ -424,6 +423,7 @@ function Header() {
               navigate(`/?keyword=${inputValue}`);
               setSearchToggle(false);
               handleKeywordHistories(inputValue);
+              setInputValue("");
             }
           }}
           searchToggle={searchToggle}
