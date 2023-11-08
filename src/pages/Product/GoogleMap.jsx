@@ -15,6 +15,7 @@ function GoogleMap({ mapTargetProduct }) {
   const [stock, setStock] = useState({});
   const { id } = useParams();
   useEffect(() => {
+    if (id > 1233) return;
     async function getStock() {
       const { data } = await api.getStock(id);
       const selectShopStocks = [...data].filter(

@@ -6,6 +6,10 @@ const api = {
     );
     return await response.json();
   },
+  async getNewProducts() {
+    const response = await fetch(`${this.hostname}/new/products/preorder`);
+    return await response.json();
+  },
   async getShopStocks(id) {
     const response = await fetch(`${this.hostname}/products/shops?id=${id}`);
     return await response.json();

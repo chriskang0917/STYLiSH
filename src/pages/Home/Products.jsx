@@ -3,6 +3,7 @@ import ReactLoading from "react-loading";
 import { Link, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import api from "../../utils/api";
+import PreOrder from "./PreOrder";
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -144,6 +145,7 @@ function Products() {
 
   return (
     <Wrapper>
+      <PreOrder />
       {products.map(({ id, main_image, colors, title, price }) => (
         <Product key={id} to={`/products/${id}`}>
           <ProductImage src={`https://handsomelai.shop${main_image}`} />

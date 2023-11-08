@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 const MainImage = styled.img`
   width: 560px;
-
+  object-fit: contain;
   @media screen and (max-width: 1279px) {
     width: 100%;
   }
@@ -241,8 +241,11 @@ const ShopStock = styled.span`
 `;
 
 const Images = styled.div`
-  margin: 30px 0 0;
-
+  width: 1160px;
+  margin-top: 30px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   @media screen and (max-width: 1279px) {
     margin: 20px 24px 0;
     width: 100%;
@@ -296,7 +299,16 @@ function Product() {
       const { data } = await api.getProduct(id);
       setProduct(data);
     }
-    getProduct();
+    async function getNewProducts() {
+      const { data } = await api.getNewProducts();
+      const targetData = data.filter((obj) => obj.id.toString() === id);
+      setProduct(targetData[0]);
+    }
+    if (id < 1234) {
+      getProduct();
+    } else {
+      getNewProducts();
+    }
   }, [id]);
 
   const [stock, setStock] = useState([]);
@@ -320,10 +332,18 @@ function Product() {
   if (!stock) return null;
 
   const hasShopDetail = stock.length > 0;
+  const isPreOrderProduct = id > 1233;
 
   return (
     <Wrapper>
-      <MainImage src={`https://handsomelai.shop${product.main_image}`} />
+      <MainImage
+        src={
+          isPreOrderProduct
+            ? product.main_image
+            : `https://handsomelai.shop${product.main_image}`
+        }
+      />
+      {/* <MainImage src={`https://handsomelai.shop${product.main_image}`} /> */}
       <Details>
         <Title>{product.title}</Title>
         <ID>{product.id}</ID>
@@ -339,41 +359,38 @@ function Product() {
         <Place>素材產地 / {product.place}</Place>
         <Place>加工產地 / {product.place}</Place>
       </Details>
-      <GoogleMapContainer>
-        <GoogleMapTitle>實體商店庫存</GoogleMapTitle>
-        <GoogleMapContent>
-          僅會顯示各店舖中，特定商品指定的顏色與尺寸數量。若有不確定的細節，請與客服確認。
-        </GoogleMapContent>
-        <MapContainer style={{ marginTop: "24px" }}>
-          <GoogleMap mapTargetProduct={mapTargetProduct} />
-        </MapContainer>
-
-
-        {hasShopDetail ? (
-
-          stock.map((shopStock) => (
-            <ShopDetails>
-              <ShopDetail key={shopStock.lat}>
-                <ShopContent>
-                  <ShopTitle>{shopStock.name}</ShopTitle>
-                  <ShopAddress>{shopStock.address}</ShopAddress>
-                  <ShopTime>
-                    營業時間：{shopStock.open_time} - {shopStock.close_time}
-                  </ShopTime>
-                  <ShopPhone>聯絡方式：{shopStock.phone}</ShopPhone>
-                </ShopContent>
-                <ShopStockWrapper>
-                  <ShopStock>{shopStock.stock} 件</ShopStock>
-                </ShopStockWrapper>
-              </ShopDetail>
-            </ShopDetails>
-
-          ))
-        ) : (
-          <p>請先選擇顏色與尺寸。</p>
-        )}
-
-      </GoogleMapContainer>
+      {isPreOrderProduct ? null : (
+        <GoogleMapContainer>
+          <GoogleMapTitle>實體商店庫存</GoogleMapTitle>
+          <GoogleMapContent>
+            僅會顯示各店舖中，特定商品指定的顏色與尺寸數量。若有不確定的細節，請與客服確認。
+          </GoogleMapContent>
+          <MapContainer style={{ marginTop: "24px" }}>
+            <GoogleMap mapTargetProduct={mapTargetProduct} />
+          </MapContainer>
+          {hasShopDetail ? (
+            stock.map((shopStock) => (
+              <ShopDetails>
+                <ShopDetail key={shopStock.lat}>
+                  <ShopContent>
+                    <ShopTitle>{shopStock.name}</ShopTitle>
+                    <ShopAddress>{shopStock.address}</ShopAddress>
+                    <ShopTime>
+                      營業時間：{shopStock.open_time} - {shopStock.close_time}
+                    </ShopTime>
+                    <ShopPhone>聯絡方式：{shopStock.phone}</ShopPhone>
+                  </ShopContent>
+                  <ShopStockWrapper>
+                    <ShopStock>{shopStock.stock} 件</ShopStock>
+                  </ShopStockWrapper>
+                </ShopDetail>
+              </ShopDetails>
+            ))
+          ) : (
+            <p>請先選擇顏色與尺寸。</p>
+          )}
+        </GoogleMapContainer>
+      )}
       <Story>
         <StoryTitle>細部說明</StoryTitle>
         <StoryContent>{product.story}</StoryContent>
@@ -381,7 +398,10 @@ function Product() {
 
       <Images>
         {product.images.map((image, index) => (
-          <Image src={`https://handsomelai.shop${image}`} key={index} />
+          <Image
+            src={id > 1233 ? image : `https://handsomelai.shop${image}`}
+            key={index}
+          />
         ))}
       </Images>
     </Wrapper>

@@ -243,7 +243,13 @@ function Cart() {
       <Items>
         {cartItems.map((item, index) => (
           <Item key={`${item.id}-${item.color.code}-${item.size}`}>
-            <ItemImage src={item.image} />
+            <ItemImage
+              src={
+                item.id > 1233
+                  ? item.image
+                  : `https://handsomelai.shop${item.image}`
+              }
+            />
             <ItemDetails>
               <ItemName>{item.name}</ItemName>
               <ItemID>{item.id}</ItemID>
@@ -256,8 +262,9 @@ function Cart() {
                 value={item.qty}
                 onChange={(e) =>
                   changeItemQuantity(index, Number(e.target.value))
-                }>
-                {Array(item.stock)
+                }
+              >
+                {Array(item.id > 1233 ? 20 : item.stock)
                   .fill()
                   .map((_, index) => (
                     <option key={index}>{index + 1}</option>
