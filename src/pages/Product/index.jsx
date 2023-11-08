@@ -313,13 +313,13 @@ function Product() {
       setStock(selectShopStocks[0].shopStocks);
     }
     getStock();
-    console.log(stock);
-    console.log(mapTargetProduct);
   }, [id, mapTargetProduct]);
-  console.log(stock);
+
   if (!product) return null;
   if (!stock) return null;
-  const hasShopDetail = true;
+
+  const hasShopDetail = stock.length > 0;
+
   return (
     <Wrapper>
       <MainImage src={`https://handsomelai.shop${product.main_image}`} />
@@ -347,7 +347,7 @@ function Product() {
           <GoogleMap mapTargetProduct={mapTargetProduct} />
         </MapContainer>
 
-        {hasShopDetail &&
+        {hasShopDetail ? (
           stock.map((shopStock) => (
             <ShopDetails>
               <ShopDetail key={shopStock.lat}>
@@ -364,7 +364,10 @@ function Product() {
                 </ShopStockWrapper>
               </ShopDetail>
             </ShopDetails>
-          ))}
+          ))
+        ) : (
+          <p>請先選擇顏色與尺寸。</p>
+        )}
       </GoogleMapContainer>
       <Story>
         <StoryTitle>細部說明</StoryTitle>
