@@ -277,68 +277,6 @@ const Image = styled.img`
   }
 `;
 
-const FAKE_SHOP_STOCKS = {
-  color_code: "#FFFFFF",
-  size: "M",
-  shopStocks: [
-    {
-      id: 6,
-      name: "台北車站館前店",
-      lat: "25.045749558028554",
-      lng: "121.51477021384437",
-      address: "台北市中正區館前路12號",
-      phone: "(02)2331-5806",
-      open_time: "11:00",
-      close_time: "22:00",
-      stock: 10,
-    },
-    {
-      id: 7,
-      name: "西門店",
-      lat: "25.044023639710836",
-      lng: "121.50711269664501",
-      address: "台北市萬華區漢中街52號",
-      phone: "(02)2331-4828",
-      open_time: "11:00",
-      close_time: "11:00",
-      stock: 9,
-    },
-    {
-      id: 8,
-      name: "Global Mall  新北中和店",
-      lat: "25.006886285840675",
-      lng: "121.47485399849825",
-      address: "新北市中和區中山路三段122號",
-      phone: "(02)3234-7604",
-      open_time: "11:00",
-      close_time: "22:00",
-      stock: 9,
-    },
-    {
-      id: 9,
-      name: "中壢中華路店",
-      lat: "24.96886585202906",
-      lng: "121.2493434678071",
-      address: "桃園市中壢區中華路一段699號",
-      phone: "(03)461-2137",
-      open_time: "11:00",
-      close_time: "22:00",
-      stock: 3,
-    },
-    {
-      id: 10,
-      name: "皮卡丘旗艦店",
-      lat: "25.02143530092362",
-      lng: "121.55607186631653",
-      address: "台北市信義區和平東路三段319號",
-      phone: "(03)2331-0857",
-      open_time: "09:00",
-      close_time: "09:30",
-      stock: 4,
-    },
-  ],
-};
-
 function Product() {
   const [product, setProduct] = useState();
   const { id } = useParams();
@@ -361,16 +299,27 @@ function Product() {
     getProduct();
   }, [id]);
 
+  const [stock, setStock] = useState([]);
+
   useEffect(() => {
-    async function getShopStocks() {
-      const { data } = await api.getShopStocks(id);
-      console.log(data);
+    async function getStock() {
+      const { data } = await api.getStock(id);
+      const selectShopStocks = [...data].filter(
+        (obj) =>
+          obj.color_code === mapTargetProduct.color &&
+          obj.size === mapTargetProduct.size
+      );
+
+      setStock(selectShopStocks[0].shopStocks);
     }
-    getShopStocks();
-  }, [id]);
-
+    getStock();
+    console.log(stock);
+    console.log(mapTargetProduct);
+  }, [id, mapTargetProduct]);
+  console.log(stock);
   if (!product) return null;
-
+  if (!stock) return null;
+  const hasShopDetail = true;
   return (
     <Wrapper>
       <MainImage src={`https://handsomelai.shop${product.main_image}`} />
@@ -397,23 +346,25 @@ function Product() {
         <MapContainer style={{ marginTop: "24px" }}>
           <GoogleMap mapTargetProduct={mapTargetProduct} />
         </MapContainer>
-        <ShopDetails>
-          {FAKE_SHOP_STOCKS.shopStocks.map((shopStock) => (
-            <ShopDetail key={shopStock.lat}>
-              <ShopContent>
-                <ShopTitle>{shopStock.name}</ShopTitle>
-                <ShopAddress>{shopStock.address}</ShopAddress>
-                <ShopTime>
-                  營業時間：{shopStock.open_time} - {shopStock.close_time}
-                </ShopTime>
-                <ShopPhone>聯絡方式：{shopStock.phone}</ShopPhone>
-              </ShopContent>
-              <ShopStockWrapper>
-                <ShopStock>{shopStock.stock} 件</ShopStock>
-              </ShopStockWrapper>
-            </ShopDetail>
+
+        {hasShopDetail &&
+          stock.map((shopStock) => (
+            <ShopDetails>
+              <ShopDetail key={shopStock.lat}>
+                <ShopContent>
+                  <ShopTitle>{shopStock.name}</ShopTitle>
+                  <ShopAddress>{shopStock.address}</ShopAddress>
+                  <ShopTime>
+                    營業時間：{shopStock.open_time} - {shopStock.close_time}
+                  </ShopTime>
+                  <ShopPhone>聯絡方式：{shopStock.phone}</ShopPhone>
+                </ShopContent>
+                <ShopStockWrapper>
+                  <ShopStock>{shopStock.stock} 件</ShopStock>
+                </ShopStockWrapper>
+              </ShopDetail>
+            </ShopDetails>
           ))}
-        </ShopDetails>
       </GoogleMapContainer>
       <Story>
         <StoryTitle>細部說明</StoryTitle>
