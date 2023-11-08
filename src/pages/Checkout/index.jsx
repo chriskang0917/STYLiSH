@@ -373,10 +373,18 @@ function Checkout() {
       );
       window.alert("付款成功");
       setCartItems([]);
+<<<<<<< HEAD
       navigate("/thankyou", {
         state: { orderNumber: checkoutResult.data.number },
       });
       console.log(checkoutResult);
+||||||| af8ef6a
+      navigate("/thankyou", { state: { orderNumber: data.number } });
+=======
+      navigate("/thankyou", {
+        state: { orderNumber: checkoutResult.data.number },
+      });
+>>>>>>> bbc44cf8c24790ceedfaded9c4a4f27d005a5c2f
     } catch (err) {
       console.log(err);
     } finally {

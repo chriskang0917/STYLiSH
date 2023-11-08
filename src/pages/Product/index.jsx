@@ -327,6 +327,7 @@ function Product() {
       setStock(selectShopStocks[0].shopStocks);
     }
     getStock();
+
   }, [id, mapTargetProduct]);
 
   if (!product) return null;
@@ -361,6 +362,7 @@ function Product() {
         <Place>加工產地 / {product.place}</Place>
       </Details>
 
+<<<<<<< HEAD
       {id > 1233 ? null : (
         <GoogleMapContainer>
           <GoogleMapTitle>實體商店庫存</GoogleMapTitle>
@@ -394,6 +396,57 @@ function Product() {
         </GoogleMapContainer>
       )}
 
+||||||| af8ef6a
+        {hasShopDetail ? (
+          stock.map((shopStock) => (
+            <ShopDetails>
+              <ShopDetail key={shopStock.lat}>
+                <ShopContent>
+                  <ShopTitle>{shopStock.name}</ShopTitle>
+                  <ShopAddress>{shopStock.address}</ShopAddress>
+                  <ShopTime>
+                    營業時間：{shopStock.open_time} - {shopStock.close_time}
+                  </ShopTime>
+                  <ShopPhone>聯絡方式：{shopStock.phone}</ShopPhone>
+                </ShopContent>
+                <ShopStockWrapper>
+                  <ShopStock>{shopStock.stock} 件</ShopStock>
+                </ShopStockWrapper>
+              </ShopDetail>
+            </ShopDetails>
+          ))
+        ) : (
+          <p>請先選擇顏色與尺寸。</p>
+        )}
+      </GoogleMapContainer>
+=======
+
+        {hasShopDetail ? (
+
+          stock.map((shopStock) => (
+            <ShopDetails>
+              <ShopDetail key={shopStock.lat}>
+                <ShopContent>
+                  <ShopTitle>{shopStock.name}</ShopTitle>
+                  <ShopAddress>{shopStock.address}</ShopAddress>
+                  <ShopTime>
+                    營業時間：{shopStock.open_time} - {shopStock.close_time}
+                  </ShopTime>
+                  <ShopPhone>聯絡方式：{shopStock.phone}</ShopPhone>
+                </ShopContent>
+                <ShopStockWrapper>
+                  <ShopStock>{shopStock.stock} 件</ShopStock>
+                </ShopStockWrapper>
+              </ShopDetail>
+            </ShopDetails>
+
+          ))
+        ) : (
+          <p>請先選擇顏色與尺寸。</p>
+        )}
+
+      </GoogleMapContainer>
+>>>>>>> bbc44cf8c24790ceedfaded9c4a4f27d005a5c2f
       <Story>
         <StoryTitle>細部說明</StoryTitle>
         <StoryContent>{product.story}</StoryContent>
