@@ -11,11 +11,8 @@ class Socket {
   connect(identity = "user") {
     this.user = identity;
 
-    const adminJwtToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM3LCJpYXQiOjE2OTkzMzE1NzEsImV4cCI6MTcwNDUxNTU3MX0.lQ5LgKSHzx9lls3pluzdqoyvN890Zaf2kQuKtIf6uMA";
-
     let userIdentity;
-    if (identity === "admin") userIdentity = [identity, adminJwtToken];
+    if (identity === "admin") userIdentity = [identity, this.adminJwtToken];
     if (identity === "user") userIdentity = [identity, this.jwtToken];
 
     this.socket.emit("user-check", userIdentity);
@@ -24,18 +21,25 @@ class Socket {
   receive(setMessage, setResponse) {
     this.socket.on("user-check", (checkMessage) => {
       console.log("user-check: ", checkMessage);
-      if (checkMessage[0] === "Notice admin user connect") {
-        // checkMessage = ["Notice admin user connect", "user connect", jwtToken]
-        setResponse(checkMessage[2]);
+
+      if (this.user === "admin") {
+        if (checkMessage[0] === "Notice admin user connect") {
+          setResponse(checkMessage[2]);
+        }
+        if (checkMessage[0] === "Disconnect") {
+          setResponse("");
+        }
       }
-      if (checkMessage[1] === "All admin is offline.") {
-        setResponse(false);
-      }
-      if (checkMessage[0] === "Disconnect") {
-        setResponse(false);
-      }
-      if (checkMessage[0] === "Connect") {
-        setResponse(true);
+      if (this.user === "user") {
+        if (checkMessage[1] === "All admin is offline.") {
+          setResponse(false);
+        }
+        if (checkMessage[0] === "Disconnect") {
+          setResponse(false);
+        }
+        if (checkMessage[1] === "user connect") {
+          setResponse(true);
+        }
       }
     });
     this.socket.on("talk", (message) => {

@@ -152,8 +152,8 @@ function ChatAdmin() {
     const initChatHistory = async () => {
       const { data: chatHistory } = await api.getChatHistory(userJwtToken);
       setMessages(getSortedMessages(chatHistory));
+      setIsConnected(true);
     };
-
     initChatHistory();
   }, [userJwtToken]);
 
@@ -188,7 +188,10 @@ function ChatAdmin() {
   return (
     <>
       <ChatHeader>Admin 後臺聊天室</ChatHeader>
-      <DisableButton onClick={handleDisableChat} $hasUser={userJwtToken}>
+      <DisableButton
+        onClick={handleDisableChat}
+        $hasUser={userJwtToken}
+        disabled={!userJwtToken}>
         結束對話
       </DisableButton>
       {!isConnected && <EmptyMessage>使用者已離開聊天室。</EmptyMessage>}
@@ -212,7 +215,7 @@ function ChatAdmin() {
         <SendArea>
           <ChatInput
             type="text"
-            placeholder="請輸入訊息"
+            placeholder={isConnected ? "請輸入訊息" : "沒有使用者上線"}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             $hasUser={userJwtToken}
