@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 class Socket {
   constructor(hostName) {
     this.adminJwtToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM3LCJpYXQiOjE2OTkzMzE1NzEsImV4cCI6MTcwNDUxNTU3MX0.lQ5LgKSHzx9lls3pluzdqoyvN890Zaf2kQuKtIf6uMA";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJpYXQiOjE2OTk0NDAxMDgsImV4cCI6MTcwNDYyNDEwOH0.qO9BQieYiDFpgxwjtf9enM9IvP6WeLCHSP5JyOOnnLQ";
     this.socket = io(hostName);
     this.jwtToken = localStorage.getItem("jwtToken") || undefined;
   }
