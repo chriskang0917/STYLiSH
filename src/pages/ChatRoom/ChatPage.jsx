@@ -143,7 +143,9 @@ function Chat() {
     };
 
     const initChatHistory = async () => {
-      const { data: chatHistory } = await api.getChatHistory();
+      const { data: chatHistory } = (await api.getChatHistory()) || {
+        data: [],
+      };
       const sortedHistory = getSortedHistory(chatHistory);
       setMessages((prevMessages) => [...prevMessages, ...sortedHistory]);
 
