@@ -355,9 +355,10 @@ function Checkout() {
         return;
       }
 
-      const { data } = await api.checkout(
+      const checkoutResult = await api.checkout(
         {
-          prime: result.card.prime,
+          prime:
+            "test_3a2fb2b7e892b914a03c95dd4dd5dc7970c908df67a49527c0a648b2bc9",
           order: {
             shipping: "delivery",
             payment: "credit_card",
@@ -372,7 +373,9 @@ function Checkout() {
       );
       window.alert("付款成功");
       setCartItems([]);
-      navigate("/thankyou", { state: { orderNumber: data.number } });
+      navigate("/thankyou", {
+        state: { orderNumber: checkoutResult.data.number },
+      });
     } catch (err) {
       console.log(err);
     } finally {
