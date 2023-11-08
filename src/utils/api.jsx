@@ -82,6 +82,7 @@ const api = {
       }),
       body: JSON.stringify({ jwtToken: userJwtToken }),
     });
+    return await response.json();
   },
   async getStock(id) {
     const response = await fetch(

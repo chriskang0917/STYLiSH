@@ -14,7 +14,6 @@ const Map = styled.div`
 function GoogleMap({ mapTargetProduct }) {
   const [stock, setStock] = useState({});
   const { id } = useParams();
-  const [map, setMap] = useState(null);
   useEffect(() => {
     async function getStock() {
       const { data } = await api.getStock(id);
@@ -42,7 +41,9 @@ function GoogleMap({ mapTargetProduct }) {
     let infoWindow4;
 
     let mapOptions = {
+
       center: { lat: 25.03553343853973, lng: 121.49999326395795 },
+
       zoom: 10,
     };
 
@@ -71,20 +72,15 @@ function GoogleMap({ mapTargetProduct }) {
 
     navigator.geolocation.getCurrentPosition(function (position) {
       currentPosition = {
-        lat: 25.03553343853973,
-        lng: 121.49999326395795,
+
+
+        lat: 25.024384039644268,
+        lng: 121.69745482973914,
       };
       map.setCenter(currentPosition);
       map.setZoom(11);
-      const autoComplete = new google.maps.places.Autocomplete({
-        bounds: {
-          east: currentPosition.lng + 0.001,
-          west: currentPosition.lng - 0.001,
-          south: currentPosition.lat - 0.001,
-          north: currentPosition.lat + 0.001,
-        },
-        strictBounds: false,
-      });
+
+
       if (!directionRenderer) {
         directionRenderer = new google.maps.DirectionsRenderer({ map: map });
       }

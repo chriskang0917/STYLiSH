@@ -46,7 +46,7 @@ function App() {
         <CartContextProvider>
           <Header />
           <Outlet />
-          {pathName !== "/chatpage" && (
+          {pathName !== "/chatpage" && pathName !== "/admin/chat" && (
             <ChatContainer>
               <Chat />
             </ChatContainer>

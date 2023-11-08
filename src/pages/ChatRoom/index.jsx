@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { AuthContext } from "../../context/authContext";
+import api from "../../utils/api";
 import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 const Avatar = styled.img`
@@ -168,6 +169,14 @@ const LoginButton = styled.button`
   border-radius: 10px;
 `;
 
+const Warning = styled.div`
+  margin: 0 auto 20px;
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: #988f8f;
+`;
+
 function Chat() {
   const { isLogin } = useContext(AuthContext);
 
@@ -176,6 +185,7 @@ function Chat() {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isAdminExist, setIsAdminExist] = useState(false);
 
   useEffect(() => {
     const getSortedHistory = (messages) => {
@@ -183,12 +193,14 @@ function Chat() {
     };
 
     const initChatHistory = async () => {
-      const { data: chatHistory } = await api.getChatHistory();
+      const { data: chatHistory } = (await api.getChatHistory()) || {
+        data: [],
+      };
       const messageHistories = getSortedHistory(chatHistory);
       setMessages((prevMessages) => [...prevMessages, ...messageHistories]);
 
       socket.connect("user");
-      socket.receive(setMessages);
+      socket.receive(setMessages, setIsAdminExist);
     };
 
     initChatHistory();
@@ -206,6 +218,7 @@ function Chat() {
   const handleSendMessage = (event) => {
     event.preventDefault();
 
+    socket.send(newMessage);
     if (newMessage.trim() === "") return;
     setMessages([
       ...messages,
@@ -223,6 +236,11 @@ function Chat() {
   return (
     <ChatContainer>
       <Header>客 服 聊 聊</Header>
+      {isAdminExist ? (
+        <Warning>客服已上線，請開始對話。</Warning>
+      ) : (
+        <Warning>目前客服尚未上線，請於服務時間再來。</Warning>
+      )}
       {isLogin ? (
         <>
           <Line />
