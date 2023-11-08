@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import api from "../../utils/api";
-// import { socket } from "../../utils/socket";
+import { socket } from "../../utils/socket";
 import profile from "./profile.png";
 
 const ChatContainer = styled.div`
@@ -171,10 +171,10 @@ function ChatAdmin() {
   const [userJwtToken, setUserJwtToken] = useState("");
   const [isConnected, setIsConnected] = useState(true);
 
-  // useEffect(() => {
-  //   socket.connect("admin");
-  //   socket.receive(setMessages, setUserJwtToken);
-  // }, []);
+  useEffect(() => {
+    socket.connect("admin");
+    socket.receive(setMessages, setUserJwtToken);
+  }, []);
 
   useEffect(() => {
     if (userJwtToken === "") return;
@@ -203,7 +203,7 @@ function ChatAdmin() {
     event.preventDefault();
 
     if (newMessage.trim() === "") return;
-    // socket.send(newMessage);
+    socket.send(newMessage);
     setMessages([
       ...messages,
       { content: newMessage, isUser: false, sendTime: Date.now() },
@@ -213,7 +213,7 @@ function ChatAdmin() {
 
   const handleDisableChat = (event) => {
     event.preventDefault();
-    // socket.disconnect();
+    socket.disconnect();
     setIsConnected(false);
     setUserJwtToken("");
   };
@@ -259,8 +259,8 @@ function ChatAdmin() {
             placeholder="請輸入訊息"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            // $hasUser={userJwtToken}
-            // disabled={!userJwtToken}
+            $hasUser={userJwtToken}
+            disabled={!userJwtToken}
           />
           <SendButton onClick={handleSendMessage} $hasUser={userJwtToken}>
             送出
