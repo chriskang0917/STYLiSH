@@ -193,7 +193,8 @@ function Chat() {
     };
 
     const initChatHistory = async () => {
-      const { data: chatHistory } = (await api.getChatHistory()) || {
+      const jwtToken = localStorage.getItem("jwtToken");
+      const { data: chatHistory } = (await api.getChatHistory(jwtToken)) || {
         data: [],
       };
       const messageHistories = getSortedHistory(chatHistory);

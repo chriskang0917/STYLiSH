@@ -74,13 +74,12 @@ const api = {
     return await response.json();
   },
   async getChatHistory(jwtToken) {
-    const userJwtToken = localStorage.getItem("jwtToken") || jwtToken;
     const response = await fetch(`${this.hostname}/user/chat/history`, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
       }),
-      body: JSON.stringify({ jwtToken: userJwtToken }),
+      body: JSON.stringify({ jwtToken }),
     });
     return await response.json();
   },
